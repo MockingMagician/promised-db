@@ -2,7 +2,7 @@ import { DatabaseInterface } from '../../src/component/interface/components.inte
 
 require('fake-indexeddb/auto')
 import { DatabaseFactory } from '../../src/database-factory'
-import {randomString} from "../test-helpers/random-string";
+import { randomString } from '../test-helpers/random-string'
 
 describe('Transaction', () => {
     let db: DatabaseInterface
