@@ -100,4 +100,36 @@ describe('Transaction', () => {
         expect(await objectStore.count(IDBKeyRange.bound(2,4))).toEqual(3)
         expect(await objectStore.count(IDBKeyRange.bound(2,4, true,  true))).toEqual(1)
     })
+
+    it('cursor should iterate over values', async () => {
+        const transaction = db.transaction(storeName, 'readwrite')
+        const objectStore = transaction.objectStore(storeName)
+        await objectStore.add(storeValue())
+        await objectStore.add(storeValue())
+        await objectStore.add(storeValue())
+
+        const cursor = objectStore.openCursor()
+        let it = 0;
+        while (await cursor.next()) {
+            const value = cursor.value()
+            expect(value).toEqual(storeValue(++it))
+        }
+        expect(it).toEqual(3)
+    })
+
+    it('cursor should iterate over keys', async () => {
+        const transaction = db.transaction(storeName, 'readwrite')
+        const objectStore = transaction.objectStore(storeName)
+        await objectStore.add(storeValue())
+        await objectStore.add(storeValue())
+        await objectStore.add(storeValue())
+
+        const cursor = objectStore.openKeyCursor()
+        let it = 0;
+        while (await cursor.next()) {
+            const value = cursor.key()
+            expect(value).toEqual(++it)
+        }
+        expect(it).toEqual(3)
+    })
 })

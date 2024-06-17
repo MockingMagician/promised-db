@@ -92,18 +92,18 @@ export class ObjectStore implements ObjectStoreInterface {
         return new Index({ index })
     }
 
-    async openCursor<R, K extends IDBValidKey>(
+    openCursor<R, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<ValueCursorInterface<R>> {
+    ): ValueCursorInterface<R> {
         const request = this.ctx.objectStore.openCursor(query, direction)
         return new ValueCursor<R>({ request })
     }
 
-    async openKeyCursor<K extends IDBValidKey>(
+    openKeyCursor<K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<KeyCursorInterface<K>> {
+    ): KeyCursorInterface<K> {
         const request = this.ctx.objectStore.openKeyCursor(query, direction)
         return new KeyCursor<K>({ request })
     }

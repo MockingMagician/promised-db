@@ -37,11 +37,11 @@ export interface ObjectStoreInterface {
     openCursor<R, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<ValueCursorInterface<R>>
+    ): ValueCursorInterface<R>
     openKeyCursor<K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<KeyCursorInterface<K>>
+    ): KeyCursorInterface<K>
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void>
 }
 
@@ -60,11 +60,11 @@ export interface IndexInterface {
     openCursor<R, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<ValueCursorInterface<R>>
+    ): ValueCursorInterface<R>
     openKeyCursor<K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<KeyCursorInterface<K>>
+    ): KeyCursorInterface<K>
 }
 
 export interface ValueCursorInterface<R> {

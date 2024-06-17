@@ -53,18 +53,18 @@ export class Index implements IndexInterface {
         return this.resolveIDBRequest<K>(request)
     }
 
-    async openCursor<R, K extends IDBValidKey>(
+    openCursor<R, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<ValueCursorInterface<R>> {
+    ): ValueCursorInterface<R> {
         const request = this.ctx.index.openCursor(query, direction)
         return new ValueCursor<R>({ request })
     }
 
-    async openKeyCursor<K extends IDBValidKey>(
+    openKeyCursor<K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): Promise<KeyCursorInterface<K>> {
+    ): KeyCursorInterface<K> {
         const request = this.ctx.index.openKeyCursor(query, direction)
         return new KeyCursor<K>({ request })
     }
