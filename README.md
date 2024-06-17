@@ -74,7 +74,7 @@ const versions = [
     },
 ]
 
-const db = await DatabaseFactory.open('mydatabase', 2, []);
+const db = await DatabaseFactory.open('mydatabase', 2, versions);
 ```
 
 **Dependencies**

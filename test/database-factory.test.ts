@@ -42,6 +42,14 @@ describe('DatabaseFactory', () => {
         db.close()
     })
 
+    it('should delete databases', async () => {
+        const dbName = randomString(25)
+        await DatabaseFactory.open(dbName)
+
+        await DatabaseFactory.deleteDatabase(dbName)
+        expect((await DatabaseFactory.databases()).length).toEqual(0)
+    })
+
     /**
      * This test is skipped because it requires a real IndexedDB implementation
      */

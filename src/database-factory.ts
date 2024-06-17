@@ -8,7 +8,7 @@ export interface VersionUpgradeInterface {
 }
 
 export class DatabaseFactory {
-    static cmp(a: unknown, b: unknown): number {
+    static cmp<T>(a: T, b: T): number {
         return new IDBFactory().cmp(a, b)
     }
 
