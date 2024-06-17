@@ -78,7 +78,7 @@ export class ObjectStore implements ObjectStoreInterface {
         query?: IDBKeyRange | K,
         count?: number
     ): Promise<K[]> {
-        const request = this.ctx.objectStore.getAll(query, count)
+        const request = this.ctx.objectStore.getAllKeys(query, count)
         return this.resolveIDBRequest<K[]>(request)
     }
 
