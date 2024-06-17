@@ -12,12 +12,12 @@ describe('components', () => {
         if (compare) {
             return {
                 id: compare,
-                name: `test_${compare}`
+                name: `test_${compare}`,
             }
         }
 
         return {
-            name: `test_${++storeInsert}`
+            name: `test_${++storeInsert}`,
         }
     }
 
@@ -68,31 +68,39 @@ describe('components', () => {
         const objectStore = await prepareStoreContent(5)
 
         expect(await objectStore.getAllKeys()).toEqual([1, 2, 3, 4, 5])
-        expect(await objectStore.getAllKeys(IDBKeyRange.bound(2,4))).toEqual([2, 3, 4])
-        expect(await objectStore.getAllKeys(IDBKeyRange.bound(2,4, true,  true))).toEqual([3])
+        expect(await objectStore.getAllKeys(IDBKeyRange.bound(2, 4))).toEqual([
+            2, 3, 4,
+        ])
+        expect(
+            await objectStore.getAllKeys(IDBKeyRange.bound(2, 4, true, true))
+        ).toEqual([3])
     })
 
     it('should get key', async () => {
         const objectStore = await prepareStoreContent(5)
 
         expect(await objectStore.getKey(3)).toEqual(3)
-        expect(await objectStore.getKey(IDBKeyRange.bound(2,4))).toEqual(2)
-        expect(await objectStore.getKey(IDBKeyRange.bound(2,4, true,  true))).toEqual(3)
+        expect(await objectStore.getKey(IDBKeyRange.bound(2, 4))).toEqual(2)
+        expect(
+            await objectStore.getKey(IDBKeyRange.bound(2, 4, true, true))
+        ).toEqual(3)
     })
 
     it('should count', async () => {
         const objectStore = await prepareStoreContent(5)
 
         expect(await objectStore.count()).toEqual(5)
-        expect(await objectStore.count(IDBKeyRange.bound(2,4))).toEqual(3)
-        expect(await objectStore.count(IDBKeyRange.bound(2,4, true,  true))).toEqual(1)
+        expect(await objectStore.count(IDBKeyRange.bound(2, 4))).toEqual(3)
+        expect(
+            await objectStore.count(IDBKeyRange.bound(2, 4, true, true))
+        ).toEqual(1)
     })
 
     it('cursor should iterate over values', async () => {
         const objectStore = await prepareStoreContent(3)
 
         const cursor = objectStore.openCursor()
-        let it = 0;
+        let it = 0
         while (await cursor.next()) {
             const value = cursor.value()
             expect(value).toEqual(storeValue(++it))
@@ -104,7 +112,7 @@ describe('components', () => {
         const objectStore = await prepareStoreContent(3)
 
         const cursor = objectStore.openKeyCursor()
-        let it = 0;
+        let it = 0
         while (await cursor.next()) {
             const value = cursor.key()
             expect(value).toEqual(++it)
@@ -114,18 +122,24 @@ describe('components', () => {
 
     it('put should update value', async () => {
         const objectStore = await prepareStoreContent(3)
-        await objectStore.put({id: 2, name: 'modified'})
+        await objectStore.put({ id: 2, name: 'modified' })
 
-        expect(await objectStore.get(2)).toEqual({id: 2, name: 'modified'})
+        expect(await objectStore.get(2)).toEqual({ id: 2, name: 'modified' })
     })
 
-    it('abort transaction should not record entries', async () => { //need investigation
+    it('abort transaction should not record entries', async () => {
+        //need investigation
         const transaction = db.transaction(storeName, 'readwrite')
         const objectStore = transaction.objectStore(storeName)
         await objectStore.add(storeValue())
         await transaction.abort()
 
-        expect(await db.transaction(storeName, 'readwrite').objectStore(storeName).count()).toEqual(0)
+        expect(
+            await db
+                .transaction(storeName, 'readwrite')
+                .objectStore(storeName)
+                .count()
+        ).toEqual(0)
     })
 
     it('clear store should be empty', async () => {
@@ -146,14 +160,18 @@ describe('components', () => {
         it('should get key', async () => {
             const objectStore = await prepareStoreContent(5)
 
-            expect(await objectStore.index('name_idx').getKey('test_3')).toEqual(3)
+            expect(
+                await objectStore.index('name_idx').getKey('test_3')
+            ).toEqual(3)
         })
 
         it('should get all keys', async () => {
             const objectStore = await prepareStoreContent(5)
             await objectStore.index('name_idx').getKey('test_3')
 
-            expect(await objectStore.index('name_idx').getAllKeys()).toEqual([1, 2, 3, 4, 5])
+            expect(await objectStore.index('name_idx').getAllKeys()).toEqual([
+                1, 2, 3, 4, 5,
+            ])
         })
     })
 })
