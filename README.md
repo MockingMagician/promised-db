@@ -26,7 +26,7 @@ const store = db.createObjectStore('users', { keyPath: 'id' });
 
 **Add some data**
 ```javascript
-import { DatabaseFactory } from 'indexeddb-promise';
+import { DatabaseFactory } from '@mockingmagician/promised-db';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
 
@@ -40,7 +40,7 @@ await tx.commit();
 
 **Fetch some data**
 ```javascript
-import { DatabaseFactory } from 'indexeddb-promise';
+import { DatabaseFactory } from '@mockingmagician/promised-db';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
 
@@ -53,7 +53,7 @@ console.log(result.name); // "John Doe"
 
 **Manage database versions**
 ```javascript
-import { DatabaseFactory } from 'indexeddb-promise';
+import { DatabaseFactory } from '@mockingmagician/promised-db';
 
 const versions = [
     {
