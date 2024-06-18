@@ -61,7 +61,6 @@ const versions = [
         upgrade: async (db) => {
             const store = db.createObjectStore('users', { keyPath: 'id' });
             store.createIndex('name_idx', 'name', { unique: false });
-            versionUpgradeOrder.push(1)
         },
     },
     {
@@ -69,7 +68,6 @@ const versions = [
         upgrade: async (db) => {
             const store = db.objectStore('users')
             store.createIndex('email_idx', 'email', { unique: true });
-            versionUpgradeOrder.push(2)
         },
     },
 ]
