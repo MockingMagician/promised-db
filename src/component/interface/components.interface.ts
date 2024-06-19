@@ -72,7 +72,10 @@ export interface ValueCursorInterface<R> {
     next(): Promise<boolean>
 }
 
-export interface KeyCursorInterface<PK extends IDBValidKey, K extends IDBValidKey> {
+export interface KeyCursorInterface<
+    PK extends IDBValidKey,
+    K extends IDBValidKey,
+> {
     primaryKey(): PK | undefined
     key(): K | undefined
     next(): Promise<boolean>

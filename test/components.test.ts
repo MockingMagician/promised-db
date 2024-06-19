@@ -160,28 +160,24 @@ describe('components', () => {
         it('should count', async () => {
             const objectStore = await prepareStoreContent(5)
 
-            expect(
-                await objectStore.index('name_idx').count()
-            ).toEqual(5)
-            expect(
-                await objectStore.index('name_idx').count('test_3')
-            ).toEqual(1)
+            expect(await objectStore.index('name_idx').count()).toEqual(5)
+            expect(await objectStore.index('name_idx').count('test_3')).toEqual(
+                1
+            )
         })
 
         it('should get', async () => {
             const objectStore = await prepareStoreContent(5)
 
-            expect(
-                await objectStore.index('name_idx').get('test_3')
-            ).toEqual(storeValue(3))
+            expect(await objectStore.index('name_idx').get('test_3')).toEqual(
+                storeValue(3)
+            )
         })
 
         it('should getAll', async () => {
             const objectStore = await prepareStoreContent(3)
 
-            expect(
-                await objectStore.index('name_idx').getAll()
-            ).toEqual([
+            expect(await objectStore.index('name_idx').getAll()).toEqual([
                 storeValue(1),
                 storeValue(2),
                 storeValue(3),

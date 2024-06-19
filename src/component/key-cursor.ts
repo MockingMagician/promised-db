@@ -1,8 +1,10 @@
 import { KeyCursorInterface } from '@/component/interface/components.interface'
 
-export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey> implements KeyCursorInterface<PK, K> {
+export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey>
+    implements KeyCursorInterface<PK, K>
+{
     private _key?: K
-    private _primaryKey?: PK;
+    private _primaryKey?: PK
 
     constructor(
         private readonly ctx: { request: IDBRequest<IDBCursor | null> }

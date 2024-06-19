@@ -6,7 +6,10 @@ export type CurrentVersionUpgrade = number
 
 export interface VersionUpgradeInterface {
     version: CurrentVersionUpgrade
-    upgrade: (db: DatabaseInterface, currentVersionUpgrade: CurrentVersionUpgrade) => Promise<void>
+    upgrade: (
+        db: DatabaseInterface,
+        currentVersionUpgrade: CurrentVersionUpgrade
+    ) => Promise<void>
 }
 
 export class DatabaseFactory {
@@ -69,7 +72,10 @@ export class DatabaseFactory {
                             reject(target.error)
                         }
                         db.addEventListener('error', handleReject)
-                        await upgrade.upgrade(new Database({ db }), upgrade.version)
+                        await upgrade.upgrade(
+                            new Database({ db }),
+                            upgrade.version
+                        )
                         db.removeEventListener('error', handleReject)
                     }
                 }
