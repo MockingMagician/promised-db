@@ -58,16 +58,24 @@ import { DatabaseFactory } from '@idxdb/promised';
 const versions = [
     {
         version: 1,
-        upgrade: async (db) => {
-            const store = db.createObjectStore('users', { keyPath: 'id' });
+        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+            const store = db.createObjectStore('users', { keyPath: 'id' })
             store.createIndex('name_idx', 'name', { unique: false });
         },
     },
     {
         version: 2,
-        upgrade: async (db) => {
-            const store = db.objectStore('users')
-            store.createIndex('email_idx', 'email', { unique: true });
+        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+            const store = transaction.objectStore('users')
+            store.createIndex('email_idx', 'email', { unique: true })
+        },
+    },
+    {
+        version: 3,
+        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+            const store = transaction.objectStore('users')
+            store.createIndex('identifier_idx', 'identifier', { unique: true })
+            store.deleteIndex('email_idx')
         },
     },
 ]

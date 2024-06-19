@@ -113,4 +113,8 @@ export class ObjectStore implements ObjectStoreInterface {
         const request = this.ctx.objectStore.put(value, key)
         return this.resolveIDBRequest(request)
     }
+
+    get indexNames(): string[] {
+        return Array.from(this.ctx.objectStore.indexNames)
+    }
 }

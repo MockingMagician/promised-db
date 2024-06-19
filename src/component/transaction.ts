@@ -36,4 +36,8 @@ export class Transaction implements TransactionInterface {
         const objectStore = this.ctx.transaction.objectStore(name)
         return new ObjectStore({ objectStore })
     }
+
+    get objectStoreNames(): string[] {
+        return Array.from(this.ctx.transaction.objectStoreNames)
+    }
 }

@@ -43,6 +43,7 @@ export interface ObjectStoreInterface {
         direction?: IDBCursorDirection
     ): KeyCursorInterface<PK, K>
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void>
+    indexNames: string[]
 }
 
 export interface IndexInterface {
@@ -85,4 +86,5 @@ export interface TransactionInterface {
     abort(): Promise<void>
     commit(): Promise<void>
     objectStore(name: string): ObjectStoreInterface
+    objectStoreNames: string[]
 }

@@ -17,38 +17,51 @@ describe('DatabaseFactory', () => {
     it('should open a database with version upgrade', async () => {
         const versionUpgradeOrder: number[] = []
         const storeToDeleteInAFutureVersion = randomString(25)
+        const indexToDeleteInAFutureVersion = randomString(25)
 
         const db = await DatabaseFactory.open(randomString(10), 2, [
             {
                 version: 1,
-                upgrade: async (db, currentVersionUpgrade) => {
-                    const store = db.createObjectStore(randomString(10))
+                upgrade: async ({ db, currentVersionUpgrade }) => {
+                    const store = db.createObjectStore('test')
                     // very long process
                     for (let i = 0; i < 100; i++) {
                         store.createIndex(randomString(50), randomString(50))
                     }
-                    store.createIndex('to_delete_idx', 'to_delete_key')
-                    store.deleteIndex('to_delete_idx')
                     versionUpgradeOrder.push(currentVersionUpgrade)
                 },
             },
             {
                 version: 2,
-                upgrade: async (db, currentVersionUpgrade) => {
+                upgrade: async ({ db, currentVersionUpgrade }) => {
                     db.createObjectStore(storeToDeleteInAFutureVersion)
                     versionUpgradeOrder.push(currentVersionUpgrade)
                 },
             },
             {
                 version: 3,
-                upgrade: async (db, currentVersionUpgrade) => {
+                upgrade: async ({ db, currentVersionUpgrade }) => {
                     db.deleteObjectStore(storeToDeleteInAFutureVersion)
+                    const store = db.createObjectStore('test2')
+                    store.createIndex(
+                        indexToDeleteInAFutureVersion,
+                        randomString(50)
+                    )
+                    versionUpgradeOrder.push(currentVersionUpgrade)
+                },
+            },
+            {
+                version: 4,
+                upgrade: async ({ transaction, currentVersionUpgrade }) => {
+                    transaction
+                        .objectStore('test2')
+                        .deleteIndex(indexToDeleteInAFutureVersion)
                     versionUpgradeOrder.push(currentVersionUpgrade)
                 },
             },
         ])
         expect(db).toBeDefined()
-        expect(versionUpgradeOrder).toEqual([1, 2, 3])
+        expect(versionUpgradeOrder).toEqual([1, 2, 3, 4])
         db.close()
     })
 

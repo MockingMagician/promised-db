@@ -1,15 +1,17 @@
 import { DatabaseInterface } from '@/component/interface/components.interface'
 import { IDBFactory } from 'fake-indexeddb'
 import { Database } from '@/component/database'
+import { Transaction } from '@/component/transaction'
 
 export type CurrentVersionUpgrade = number
 
 export interface VersionUpgradeInterface {
     version: CurrentVersionUpgrade
-    upgrade: (
-        db: DatabaseInterface,
+    upgrade: (upgradeCtx: {
+        db: DatabaseInterface
+        transaction: Transaction
         currentVersionUpgrade: CurrentVersionUpgrade
-    ) => Promise<void>
+    }) => Promise<void>
 }
 
 export class DatabaseFactory {
@@ -59,23 +61,25 @@ export class DatabaseFactory {
 
             request.addEventListener('upgradeneeded', async (event) => {
                 const target = event.target as IDBOpenDBRequest
+                const db = target.result
+                const transaction = target.transaction as IDBTransaction
                 versionUpgrades = versionUpgrades.sort(
                     (a, b) => a.version - b.version
                 )
 
                 for (const upgrade of versionUpgrades) {
                     if (event.oldVersion < upgrade.version) {
-                        const db = target.result
                         /* istanbul ignore next */
                         const handleReject = (event: Event) => {
                             const target = event.target as IDBOpenDBRequest
                             reject(target.error)
                         }
                         db.addEventListener('error', handleReject)
-                        await upgrade.upgrade(
-                            new Database({ db }),
-                            upgrade.version
-                        )
+                        await upgrade.upgrade({
+                            db: new Database({ db }),
+                            transaction: new Transaction({ transaction }),
+                            currentVersionUpgrade: upgrade.version,
+                        })
                         db.removeEventListener('error', handleReject)
                     }
                 }
