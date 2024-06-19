@@ -37,7 +37,7 @@ describe('components', () => {
         db = await DatabaseFactory.open(randomString(25), 1, [
             {
                 version: 1,
-                upgrade: async (db) => {
+                upgrade: async ({db}) => {
                     const store = db.createObjectStore(storeName, {
                         keyPath: 'id',
                         autoIncrement: true,

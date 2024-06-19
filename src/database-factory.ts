@@ -1,5 +1,4 @@
 import { DatabaseInterface } from '@/component/interface/components.interface'
-import { IDBFactory } from 'fake-indexeddb'
 import { Database } from '@/component/database'
 import { Transaction } from '@/component/transaction'
 
@@ -15,19 +14,25 @@ export interface VersionUpgradeInterface {
 }
 
 export class DatabaseFactory {
+    private static readonly factory: IDBFactory = new IDBFactory()
+
     static cmp<T>(a: T, b: T): number {
-        return new IDBFactory().cmp(a, b)
+        return this.factory.cmp(a, b)
     }
 
     static databases(): Promise<IDBDatabaseInfo[]> {
-        return new IDBFactory().databases()
+        return this.factory.databases()
     }
 
     static deleteDatabase(name: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            const request = new IDBFactory().deleteDatabase(name)
+            const request = this.factory.deleteDatabase(name)
             request.addEventListener('success', () => {
                 resolve()
+            })
+            /* istanbul ignore next */
+            request.addEventListener('blocked', (event) => {
+                reject('blocked')
             })
             /* istanbul ignore next */
             request.addEventListener('error', (event) => {
@@ -43,7 +48,7 @@ export class DatabaseFactory {
         versionUpgrades: VersionUpgradeInterface[] = []
     ): Promise<DatabaseInterface> {
         return new Promise((resolve, reject) => {
-            const request: IDBOpenDBRequest = new IDBFactory().open(
+            const request: IDBOpenDBRequest = this.factory.open(
                 name,
                 version
             )

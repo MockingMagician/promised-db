@@ -67,28 +67,26 @@ describe('DatabaseFactory', () => {
 
     it('should delete databases', async () => {
         const dbName = randomString(25)
-        await DatabaseFactory.open(dbName)
+        const db = await DatabaseFactory.open(dbName)
+        db.close()
 
         await DatabaseFactory.deleteDatabase(dbName)
-        expect((await DatabaseFactory.databases()).length).toEqual(0)
+        expect((await DatabaseFactory.databases()).map(dbInfos => dbInfos.name)).not.toContain(dbName)
     })
 
-    /**
-     * This test is skipped because it requires a real IndexedDB implementation
-     */
-    it.skip('should show created databases', async () => {
+    it('should show created databases', async () => {
         const databaseNames = [
             randomString(25),
             randomString(25),
             randomString(25),
         ]
         for (const name of databaseNames) {
-            await DatabaseFactory.open(name)
+            const db = await DatabaseFactory.open(name)
+            db.close()
         }
-        const existingDatabases = await DatabaseFactory.databases()
-        expect(existingDatabases.length).toEqual(databaseNames.length)
-        expect(existingDatabases.map((database) => database.name)).toEqual(
-            databaseNames
-        )
+        const existingDatabases = (await DatabaseFactory.databases()).map(dbInfos => dbInfos.name)
+        for (const database of databaseNames) {
+            expect(existingDatabases).toContain(database)
+        }
     })
 })
