@@ -157,6 +157,37 @@ describe('components', () => {
     })
 
     describe('index', () => {
+        it('should count', async () => {
+            const objectStore = await prepareStoreContent(5)
+
+            expect(
+                await objectStore.index('name_idx').count()
+            ).toEqual(5)
+            expect(
+                await objectStore.index('name_idx').count('test_3')
+            ).toEqual(1)
+        })
+
+        it('should get', async () => {
+            const objectStore = await prepareStoreContent(5)
+
+            expect(
+                await objectStore.index('name_idx').get('test_3')
+            ).toEqual(storeValue(3))
+        })
+
+        it('should getAll', async () => {
+            const objectStore = await prepareStoreContent(3)
+
+            expect(
+                await objectStore.index('name_idx').getAll()
+            ).toEqual([
+                storeValue(1),
+                storeValue(2),
+                storeValue(3),
+            ])
+        })
+
         it('should get key', async () => {
             const objectStore = await prepareStoreContent(5)
 
@@ -167,11 +198,54 @@ describe('components', () => {
 
         it('should get all keys', async () => {
             const objectStore = await prepareStoreContent(5)
-            await objectStore.index('name_idx').getKey('test_3')
 
             expect(await objectStore.index('name_idx').getAllKeys()).toEqual([
                 1, 2, 3, 4, 5,
             ])
+        })
+
+        it('should get all keys', async () => {
+            const objectStore = await prepareStoreContent(5)
+
+            expect(await objectStore.index('name_idx').getAllKeys()).toEqual([
+                1, 2, 3, 4, 5,
+            ])
+        })
+
+        it('cursor should iterate over values', async () => {
+            const objectStore = await prepareStoreContent(3)
+
+            const cursor = objectStore.index('name_idx').openCursor()
+            let it = 0
+            while (await cursor.next()) {
+                const value = cursor.value()
+                expect(value).toEqual(storeValue(++it))
+            }
+            expect(it).toEqual(3)
+        })
+
+        it('cursor should iterate over keys', async () => {
+            const objectStore = await prepareStoreContent(3)
+
+            const cursor = objectStore.index('name_idx').openKeyCursor()
+            let it = 0
+            while (await cursor.next()) {
+                const value = storeValue(++it)
+                expect(cursor.key()).toEqual(value.name)
+                expect(cursor.primaryKey()).toEqual(value.id)
+            }
+            expect(it).toEqual(3)
+        })
+
+        it('cursor should iterate over keys on query', async () => {
+            const objectStore = await prepareStoreContent(3)
+
+            const cursor = objectStore.index('name_idx').openKeyCursor('test_2')
+            while (await cursor.next()) {
+                const value = storeValue(2)
+                expect(cursor.key()).toEqual(value.name)
+                expect(cursor.primaryKey()).toEqual(value.id)
+            }
         })
     })
 })

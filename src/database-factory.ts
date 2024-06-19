@@ -2,9 +2,11 @@ import { DatabaseInterface } from '@/component/interface/components.interface'
 import { IDBFactory } from 'fake-indexeddb'
 import { Database } from '@/component/database'
 
+export type CurrentVersionUpgrade = number
+
 export interface VersionUpgradeInterface {
-    version: number
-    upgrade: (db: DatabaseInterface) => Promise<void>
+    version: CurrentVersionUpgrade
+    upgrade: (db: DatabaseInterface, currentVersionUpgrade: CurrentVersionUpgrade) => Promise<void>
 }
 
 export class DatabaseFactory {
@@ -22,6 +24,7 @@ export class DatabaseFactory {
             request.addEventListener('success', () => {
                 resolve()
             })
+            /* istanbul ignore next */
             request.addEventListener('error', (event) => {
                 const target = event.target as IDBOpenDBRequest
                 reject(target.error)
@@ -45,6 +48,7 @@ export class DatabaseFactory {
                 resolve(new Database({ db: target.result }))
             })
 
+            /* istanbul ignore next */
             request.addEventListener('error', (event) => {
                 const target = event.target as IDBOpenDBRequest
                 reject(target.error)
@@ -59,12 +63,13 @@ export class DatabaseFactory {
                 for (const upgrade of versionUpgrades) {
                     if (event.oldVersion < upgrade.version) {
                         const db = target.result
+                        /* istanbul ignore next */
                         const handleReject = (event: Event) => {
                             const target = event.target as IDBOpenDBRequest
                             reject(target.error)
                         }
                         db.addEventListener('error', handleReject)
-                        await upgrade.upgrade(new Database({ db }))
+                        await upgrade.upgrade(new Database({ db }), upgrade.version)
                         db.removeEventListener('error', handleReject)
                     }
                 }

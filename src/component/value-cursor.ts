@@ -18,6 +18,7 @@ export class ValueCursor<R> implements ValueCursorInterface<R> {
                 request.onerror = null
                 resolve(cursor)
             }
+            /* istanbul ignore next */
             request.onerror = (event) => {
                 const target = event.target as IDBRequest<IDBCursorWithValue>
                 request.onsuccess = null

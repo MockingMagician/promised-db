@@ -38,10 +38,10 @@ export interface ObjectStoreInterface {
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
     ): ValueCursorInterface<R>
-    openKeyCursor<K extends IDBValidKey>(
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<K>
+    ): KeyCursorInterface<PK, K>
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void>
 }
 
@@ -61,10 +61,10 @@ export interface IndexInterface {
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
     ): ValueCursorInterface<R>
-    openKeyCursor<K extends IDBValidKey>(
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<K>
+    ): KeyCursorInterface<PK, K>
 }
 
 export interface ValueCursorInterface<R> {
@@ -72,7 +72,8 @@ export interface ValueCursorInterface<R> {
     next(): Promise<boolean>
 }
 
-export interface KeyCursorInterface<K extends IDBValidKey> {
+export interface KeyCursorInterface<PK extends IDBValidKey, K extends IDBValidKey> {
+    primaryKey(): PK | undefined
     key(): K | undefined
     next(): Promise<boolean>
 }

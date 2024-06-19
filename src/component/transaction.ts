@@ -12,6 +12,7 @@ export class Transaction implements TransactionInterface {
             this.ctx.transaction.addEventListener('abort', () => {
                 resolve()
             })
+            /* istanbul ignore next */
             this.ctx.transaction.addEventListener('error', (event) => {
                 const target = event.target as IDBTransaction
                 reject(target.error)
@@ -24,6 +25,7 @@ export class Transaction implements TransactionInterface {
             this.ctx.transaction.addEventListener('complete', () => {
                 resolve()
             })
+            /* istanbul ignore next */
             this.ctx.transaction.addEventListener('error', (event) => {
                 const target = event.target as IDBTransaction
                 reject(target.error)

@@ -16,29 +16,39 @@ describe('DatabaseFactory', () => {
 
     it('should open a database with version upgrade', async () => {
         const versionUpgradeOrder: number[] = []
+        const storeToDeleteInAFutureVersion = randomString(25)
 
         const db = await DatabaseFactory.open(randomString(10), 2, [
             {
                 version: 1,
-                upgrade: async (db) => {
+                upgrade: async (db, currentVersionUpgrade) => {
                     const store = db.createObjectStore(randomString(10))
                     // very long process
                     for (let i = 0; i < 100; i++) {
                         store.createIndex(randomString(50), randomString(50))
                     }
-                    versionUpgradeOrder.push(1)
+                    store.createIndex('to_delete_idx', 'to_delete_key')
+                    store.deleteIndex('to_delete_idx')
+                    versionUpgradeOrder.push(currentVersionUpgrade)
                 },
             },
             {
                 version: 2,
-                upgrade: async (db) => {
-                    db.createObjectStore(randomString(10))
-                    versionUpgradeOrder.push(2)
+                upgrade: async (db, currentVersionUpgrade) => {
+                    db.createObjectStore(storeToDeleteInAFutureVersion)
+                    versionUpgradeOrder.push(currentVersionUpgrade)
+                },
+            },
+            {
+                version: 3,
+                upgrade: async (db, currentVersionUpgrade) => {
+                    db.deleteObjectStore(storeToDeleteInAFutureVersion)
+                    versionUpgradeOrder.push(currentVersionUpgrade)
                 },
             },
         ])
         expect(db).toBeDefined()
-        expect(versionUpgradeOrder).toEqual([1, 2])
+        expect(versionUpgradeOrder).toEqual([1, 2, 3])
         db.close()
     })
 

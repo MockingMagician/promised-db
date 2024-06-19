@@ -15,6 +15,7 @@ export class Index implements IndexInterface {
                 const target = event.target as IDBRequest
                 resolve(target.result)
             })
+            /* istanbul ignore next */
             request.addEventListener('error', (event) => {
                 const target = event.target as IDBRequest
                 reject(target.error)
@@ -61,11 +62,11 @@ export class Index implements IndexInterface {
         return new ValueCursor<R>({ request })
     }
 
-    openKeyCursor<K extends IDBValidKey>(
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<K> {
+    ): KeyCursorInterface<PK, K> {
         const request = this.ctx.index.openKeyCursor(query, direction)
-        return new KeyCursor<K>({ request })
+        return new KeyCursor<PK, K>({ request })
     }
 }

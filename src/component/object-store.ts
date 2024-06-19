@@ -17,6 +17,7 @@ export class ObjectStore implements ObjectStoreInterface {
                 const target = event.target as IDBRequest
                 resolve(target.result)
             })
+            /* istanbul ignore next */
             request.addEventListener('error', (event) => {
                 const target = event.target as IDBRequest
                 reject(target.error)
@@ -100,12 +101,12 @@ export class ObjectStore implements ObjectStoreInterface {
         return new ValueCursor<R>({ request })
     }
 
-    openKeyCursor<K extends IDBValidKey>(
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<K> {
+    ): KeyCursorInterface<PK, K> {
         const request = this.ctx.objectStore.openKeyCursor(query, direction)
-        return new KeyCursor<K>({ request })
+        return new KeyCursor<PK, K>({ request })
     }
 
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void> {
