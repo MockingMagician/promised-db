@@ -1,5 +1,5 @@
 {
-  "name": "@mockingmagician/promised-db",
+  "name": "@idexeddb/promised-db",
   "version": "0.2.0",
   "description": "Promised version of indexed DB that simplify usage",
   "main": "/dist/src/index.js",
