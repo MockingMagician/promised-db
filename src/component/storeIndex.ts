@@ -6,7 +6,7 @@ import {
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
 
-export class Index implements IndexInterface {
+export class StoreIndex implements IndexInterface {
     constructor(private readonly ctx: { index: IDBIndex }) {}
 
     private resolveIDBRequest<V>(request: IDBRequest): Promise<V> {

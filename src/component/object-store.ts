@@ -4,7 +4,7 @@ import {
     ObjectStoreInterface,
     ValueCursorInterface,
 } from '@/component/interface/components.interface'
-import { Index } from '@/component/index'
+import { StoreIndex } from '@/component/storeIndex'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
 
@@ -50,7 +50,7 @@ export class ObjectStore implements ObjectStoreInterface {
             keyPath,
             options
         )
-        return new Index({ index })
+        return new StoreIndex({ index })
     }
 
     delete<K extends IDBValidKey>(query: IDBKeyRange | K): Promise<void> {
@@ -90,7 +90,7 @@ export class ObjectStore implements ObjectStoreInterface {
 
     index(name: string): IndexInterface {
         const index = this.ctx.objectStore.index(name)
-        return new Index({ index })
+        return new StoreIndex({ index })
     }
 
     openCursor<R, K extends IDBValidKey>(
