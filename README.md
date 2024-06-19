@@ -1,7 +1,7 @@
 **Overview**
 ----------
 
-**@idexeddb/promised-db** is a lightweight library that wraps the IndexedDB API, providing a more natural way to work with promises. It allows you to easily store and retrieve data in an indexed database using async/await syntax, making it easier to integrate with your existing codebase.
+**@idxdb/promised** is a lightweight library that wraps the IndexedDB API, providing a more natural way to work with promises. It allows you to easily store and retrieve data in an indexed database using async/await syntax, making it easier to integrate with your existing codebase.
 
 **Installation**
 --------------
@@ -9,7 +9,7 @@
 To install this package, run the following command in your terminal:
 
 ```
-npm install @idexeddb/promised-db
+npm install @idxdb/promised
 ```
 
 **Usage**
@@ -17,7 +17,7 @@ npm install @idexeddb/promised-db
 
 **Create database**
 ```javascript
-import { DatabaseFactory } from '@idexeddb/promised-db';
+import { DatabaseFactory } from '@idxdb/promised';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
 
@@ -26,7 +26,7 @@ const store = db.createObjectStore('users', { keyPath: 'id' });
 
 **Add some data**
 ```javascript
-import { DatabaseFactory } from '@idexeddb/promised-db';
+import { DatabaseFactory } from '@idxdb/promised';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
 
@@ -40,7 +40,7 @@ await tx.commit();
 
 **Fetch some data**
 ```javascript
-import { DatabaseFactory } from '@idexeddb/promised-db';
+import { DatabaseFactory } from '@idxdb/promised';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
 
@@ -53,7 +53,7 @@ console.log(result.name); // "John Doe"
 
 **Manage database versions**
 ```javascript
-import { DatabaseFactory } from '@idexeddb/promised-db';
+import { DatabaseFactory } from '@idxdb/promised';
 
 const versions = [
     {
