@@ -40,6 +40,7 @@ export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey>
             return true
         }
         this._key = undefined
+        this._primaryKey = undefined
         return false
     }
 
