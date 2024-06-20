@@ -5,3 +5,4 @@ dist
 !.eslintrc.json
 !.prettierrc.json
 coverage
+!.github

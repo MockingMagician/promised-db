@@ -31,7 +31,7 @@ export class DatabaseFactory {
                 resolve()
             })
             /* istanbul ignore next */
-            request.addEventListener('blocked', (event) => {
+            request.addEventListener('blocked', () => {
                 reject('blocked')
             })
             /* istanbul ignore next */
@@ -48,10 +48,7 @@ export class DatabaseFactory {
         versionUpgrades: VersionUpgradeInterface[] = []
     ): Promise<DatabaseInterface> {
         return new Promise((resolve, reject) => {
-            const request: IDBOpenDBRequest = this.factory.open(
-                name,
-                version
-            )
+            const request: IDBOpenDBRequest = this.factory.open(name, version)
 
             request.addEventListener('success', (event) => {
                 const target = event.target as IDBOpenDBRequest
