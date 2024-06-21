@@ -24,7 +24,7 @@
     "/dist"
   ],
   "scripts": {
-    "build": "ts-node ./generator/command/generate-root-index.ts && rimraf dist && tsc",
+    "build": "ts-node ./generator/command/generate-root-index.ts && rimraf dist && tsc && tsc-alias",
     "lint": "eslint '{src,test}/**/*.{ts,tsx}'",
     "prettier": "eslint '{src,test}/**/*.{ts,tsx}' --fix",
     "test": "jest"
@@ -54,6 +54,7 @@
     "rimraf": "^5.0.7",
     "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.4.5"
   }
 }
