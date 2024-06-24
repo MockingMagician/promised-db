@@ -14,7 +14,8 @@ export interface VersionUpgradeInterface {
 }
 
 export class DatabaseFactory {
-    private static readonly factory: IDBFactory = global.window?.indexedDB || new IDBFactory()
+    private static readonly factory: IDBFactory =
+        global.window?.indexedDB || new IDBFactory()
 
     static cmp<T>(a: T, b: T): number {
         return this.factory.cmp(a, b)

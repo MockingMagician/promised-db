@@ -96,13 +96,15 @@ describe('DatabaseFactory', () => {
 
     it('should gives store names', async () => {
         const dbName = randomString(25)
-        const db = await DatabaseFactory.open(dbName, 1, [{
-            version: 1,
-            upgrade: async ({ db }) => {
-                db.createObjectStore('store1')
-                db.createObjectStore('store2')
-            }
-        }])
+        const db = await DatabaseFactory.open(dbName, 1, [
+            {
+                version: 1,
+                upgrade: async ({ db }) => {
+                    db.createObjectStore('store1')
+                    db.createObjectStore('store2')
+                },
+            },
+        ])
 
         expect(db.objectStoreNames).toEqual(['store1', 'store2'])
     })
