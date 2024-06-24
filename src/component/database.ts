@@ -33,4 +33,8 @@ export class Database implements DatabaseInterface {
         const transaction = this.ctx.db.transaction(storeNames, mode, options)
         return new Transaction({ transaction })
     }
+
+    get objectStoreNames(): string[] {
+        return Array.from(this.ctx.db.objectStoreNames)
+    }
 }

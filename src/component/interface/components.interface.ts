@@ -10,6 +10,7 @@ export interface DatabaseInterface {
         mode?: IDBTransactionMode,
         options?: IDBTransactionOptions
     ): TransactionInterface
+    objectStoreNames: string[]
 }
 
 export interface ObjectStoreInterface {
