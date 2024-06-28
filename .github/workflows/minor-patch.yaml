@@ -1,9 +1,7 @@
 name: publish regul patch
-
 on:
-  schedule:
-      - cron: '*/25 * * * *'
-
+    schedule:
+        - cron: '*/25 * * * *'
 jobs:
     test:
         runs-on: ubuntu-latest
@@ -17,3 +15,4 @@ jobs:
             - run: npm build
             - run: npm version patch
             - nun: git push --follow-tags
+
