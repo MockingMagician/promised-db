@@ -1,6 +1,5 @@
-import { Database } from '@/component/interface/components.interface'
-import { Database } from '@/component/database'
 import { Transaction } from '@/component/transaction'
+import {Database} from "@/component/database";
 
 export type CurrentVersionUpgrade = number
 

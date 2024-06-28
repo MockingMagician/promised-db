@@ -1,10 +1,10 @@
 require('fake-indexeddb/auto')
 import { DatabaseFactory } from '../src/database-factory'
 import { randomString } from './test-helpers/random-string'
-import { Database } from '../src/component/interface/components.interface'
+import { DatabaseInterface } from '../src/component/interface/components.interface'
 
 describe('components', () => {
-    let db: Database
+    let db: DatabaseInterface
     let storeName: string
 
     let storeInsert = 0

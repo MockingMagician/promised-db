@@ -1,4 +1,4 @@
-export interface Database {
+export interface DatabaseInterface {
     close(): void
     createObjectStore(
         name: string,
@@ -99,7 +99,7 @@ export interface TransactionInterface {
     commit(): Promise<void>
     objectStore(name: string): ObjectStoreInterface
     objectStoreNames: string[]
-    db: Database
+    db: DatabaseInterface
     durability: IDBTransactionDurability
     error: DOMException
     mode: IDBTransactionMode
