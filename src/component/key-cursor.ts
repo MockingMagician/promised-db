@@ -1,4 +1,4 @@
-import { KeyCursorInterface } from '@/component/interface/components.interface'
+import {IndexInterface, KeyCursorInterface, ObjectStoreInterface} from '@/component/interface/components.interface'
 import { requestResolver } from '@/global/request-resolver'
 
 export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
@@ -11,6 +11,7 @@ export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
         private readonly ctx: {
             request: IDBRequest<IDBCursor | null>
             direction: IDBCursorDirection
+            source: ObjectStoreInterface | IndexInterface
         }
     ) {
         this._cursorPromise = requestResolver<IDBCursor | null>(
@@ -31,6 +32,10 @@ export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
 
     get direction(): IDBCursorDirection {
         return this.ctx.direction
+    }
+
+    get source(): ObjectStoreInterface | IndexInterface {
+        return this.ctx.source
     }
 
     async end(): Promise<boolean> {

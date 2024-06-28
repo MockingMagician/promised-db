@@ -85,6 +85,7 @@ export interface KeyCursorInterface<
     primaryKey: PK | undefined
     key: K | undefined
     direction: IDBCursorDirection
+    source: ObjectStoreInterface | IndexInterface
     end(): Promise<boolean>
     continue(key?: K): void
     advance(count: number): void
