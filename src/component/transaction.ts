@@ -3,6 +3,7 @@ import {
     TransactionInterface,
 } from '@/component/interface/components.interface'
 import { ObjectStore } from '@/component/object-store'
+import { Database } from '@/component/database'
 
 export class Transaction implements TransactionInterface {
     constructor(private readonly ctx: { transaction: IDBTransaction }) {}
@@ -39,5 +40,18 @@ export class Transaction implements TransactionInterface {
 
     get objectStoreNames(): string[] {
         return Array.from(this.ctx.transaction.objectStoreNames)
+    }
+
+    get db(): Database {
+        return new Database({ db: this.ctx.transaction.db })
+    }
+    get durability(): IDBTransactionDurability {
+        return this.ctx.transaction.durability
+    }
+    get error(): DOMException {
+        return this.ctx.transaction.error
+    }
+    get mode(): IDBTransactionMode {
+        return this.ctx.transaction.mode
     }
 }

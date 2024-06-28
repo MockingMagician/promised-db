@@ -1,4 +1,4 @@
-import { DatabaseInterface } from '@/component/interface/components.interface'
+import { Database } from '@/component/interface/components.interface'
 import { Database } from '@/component/database'
 import { Transaction } from '@/component/transaction'
 
@@ -7,7 +7,7 @@ export type CurrentVersionUpgrade = number
 export interface VersionUpgradeInterface {
     version: CurrentVersionUpgrade
     upgrade: (upgradeCtx: {
-        db: DatabaseInterface
+        db: Database
         transaction: Transaction
         currentVersionUpgrade: CurrentVersionUpgrade
     }) => Promise<void>
@@ -47,7 +47,7 @@ export class DatabaseFactory {
         name: string,
         version: number = 1,
         versionUpgrades: VersionUpgradeInterface[] = []
-    ): Promise<DatabaseInterface> {
+    ): Promise<Database> {
         return new Promise((resolve, reject) => {
             const request: IDBOpenDBRequest = this.factory.open(name, version)
 

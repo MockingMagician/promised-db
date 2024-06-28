@@ -1,12 +1,12 @@
 import {
-    DatabaseInterface,
+    Database,
     ObjectStoreInterface,
     TransactionInterface,
 } from '@/component/interface/components.interface'
 import { ObjectStore } from '@/component/object-store'
 import { Transaction } from '@/component/transaction'
 
-export class Database implements DatabaseInterface {
+export class Database implements Database {
     constructor(private readonly ctx: { db: IDBDatabase }) {}
 
     close(): void {

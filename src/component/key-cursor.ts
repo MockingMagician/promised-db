@@ -1,54 +1,71 @@
 import { KeyCursorInterface } from '@/component/interface/components.interface'
+import { requestResolver } from '@/global/request-resolver'
 
-export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey>
-    implements KeyCursorInterface<PK, K>
+export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
+    implements KeyCursorInterface<PK, K, R>
 {
-    private _key?: K
-    private _primaryKey?: PK
+    protected _cursor: IDBCursor | null
+    protected _cursorPromise: Promise<IDBCursor | null>
 
     constructor(
-        private readonly ctx: { request: IDBRequest<IDBCursor | null> }
-    ) {}
-
-    private resolveIDBRequestCursor(
-        request: IDBRequest<IDBCursor | null>
-    ): Promise<IDBCursor | null> {
-        return new Promise((resolve, reject): void => {
-            request.onsuccess = (event) => {
-                const target = event.target as IDBRequest<IDBCursor>
-                const cursor = target.result
-                request.onsuccess = null
-                request.onerror = null
-                resolve(cursor)
-            }
-            /* istanbul ignore next */
-            request.onerror = (event) => {
-                const target = event.target as IDBRequest<IDBCursor>
-                request.onsuccess = null
-                request.onerror = null
-                reject(target.error)
-            }
+        private readonly ctx: {
+            request: IDBRequest<IDBCursor | null>
+            direction: IDBCursorDirection
+        }
+    ) {
+        this._cursorPromise = requestResolver<IDBCursor | null>(
+            ctx.request
+        ).then((cursor) => {
+            this._cursor = cursor
+            return cursor
         })
     }
 
-    async next(): Promise<boolean> {
-        const cursor = await this.resolveIDBRequestCursor(this.ctx.request)
-        if (cursor) {
-            this._key = cursor.key as K
-            this._primaryKey = cursor.primaryKey as PK
-            cursor.continue()
-            return true
-        }
-        this._key = undefined
-        this._primaryKey = undefined
-        return false
+    get key(): K {
+        return this._cursor?.key as K | undefined
     }
 
-    key(): K | undefined {
-        return this._key
+    get primaryKey(): PK | undefined {
+        return this._cursor?.primaryKey as PK | undefined
     }
 
-    primaryKey(): PK | undefined {
-        return this._primaryKey
+    get direction(): IDBCursorDirection {
+        return this.ctx.direction
+    }
+
+    async end(): Promise<boolean> {
+        return this._cursorPromise.then((cursor) => !cursor)
+    }
+
+    continue(key?: K | PK): void {
+        this.stepUp()?.continue(key)
+    }
+
+    advance(count: number): void {
+        this.stepUp()?.advance(count)
+    }
+
+    continuePrimaryKey(key: K, primaryKey: PK): void {
+        this.stepUp()?.continuePrimaryKey(key, primaryKey)
+    }
+
+    async delete(): Promise<void> {
+        await requestResolver<undefined>(this._cursor.delete())
+    }
+
+    async update(value: R): Promise<void> {
+        await requestResolver<IDBValidKey>(this._cursor.update(value))
+    }
+
+    private stepUp(): IDBCursor | null {
+        this._cursorPromise = requestResolver<IDBCursor | null>(
+            this.ctx.request
+        ).then((cursor) => {
+            this._cursor = cursor
+            return cursor
+        })
+        const cursor = this._cursor
+        this._cursor = null
+        return cursor
     }
 }

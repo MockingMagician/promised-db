@@ -1,4 +1,4 @@
-export interface DatabaseInterface {
+export interface Database {
     close(): void
     createObjectStore(
         name: string,
@@ -35,14 +35,14 @@ export interface ObjectStoreInterface {
     ): Promise<K[]>
     getKey<K extends IDBValidKey>(key: IDBKeyRange | K): Promise<K>
     index(name: string): IndexInterface
-    openCursor<R, K extends IDBValidKey>(
+    openCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): ValueCursorInterface<R>
-    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
+    ): ValueCursorInterface<PK, K, R>
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<PK, K>
+    ): KeyCursorInterface<PK, K, R>
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void>
     indexNames: string[]
 }
@@ -59,28 +59,38 @@ export interface IndexInterface {
         count?: number
     ): Promise<K[]>
     getKey<K extends IDBValidKey>(key: IDBKeyRange | K): Promise<K>
-    openCursor<R, K extends IDBValidKey>(
+    openCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): ValueCursorInterface<R>
-    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
+    ): ValueCursorInterface<PK, K, R>
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<PK, K>
+    ): KeyCursorInterface<PK, K, R>
 }
 
-export interface ValueCursorInterface<R> {
-    value(): R | undefined
-    next(): Promise<boolean>
+export interface ValueCursorInterface<
+    PK extends IDBValidKey,
+    K extends IDBValidKey,
+    R,
+> extends KeyCursorInterface<PK, K, R> {
+    value: R | undefined
 }
 
 export interface KeyCursorInterface<
     PK extends IDBValidKey,
     K extends IDBValidKey,
+    R,
 > {
-    primaryKey(): PK | undefined
-    key(): K | undefined
-    next(): Promise<boolean>
+    primaryKey: PK | undefined
+    key: K | undefined
+    direction: IDBCursorDirection
+    end(): Promise<boolean>
+    continue(key?: K): void
+    advance(count: number): void
+    continuePrimaryKey(key: K, primaryKey: PK): void
+    delete(): Promise<void>
+    update(value: R): Promise<void>
 }
 
 export interface TransactionInterface {
@@ -88,4 +98,8 @@ export interface TransactionInterface {
     commit(): Promise<void>
     objectStore(name: string): ObjectStoreInterface
     objectStoreNames: string[]
+    db: Database
+    durability: IDBTransactionDurability
+    error: DOMException
+    mode: IDBTransactionMode
 }
