@@ -1,7 +1,7 @@
 name: publish regul patch
 on:
     schedule:
-        - cron: '*/25 * * * *'
+        - cron: '*/2 * * * *'
 jobs:
     test:
         runs-on: ubuntu-latest
