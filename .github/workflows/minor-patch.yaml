@@ -37,8 +37,8 @@ jobs:
                   ls -la ~/.ssh
                   echo "Contents of known_hosts:"
                   cat ~/.ssh/known_hosts
-            - name: Test SSH connection
-              run: ssh -T git@github.com || exit 1
+#            - name: Test SSH connection
+#              run: ssh -T git@github.com || exit 1
             - run: npm ci
             - run: npm run build
             - run: |
