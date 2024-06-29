@@ -30,7 +30,7 @@ jobs:
                   
                   # Start the SSH agent and add the key
                   eval "$(ssh-agent -s)"
-                  ssh-add ~/.ssh/id_rsa
+                  ssh-add ~/.ssh/pk
                   
                   # Debugging steps
                   echo "Contents of ~/.ssh directory:"
