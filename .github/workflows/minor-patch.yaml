@@ -45,7 +45,7 @@ jobs:
             - run: |
                   git config --global user.name 'Marc MOREAU'
                   git config --global user.email 'moreau.marc.web@gmail.comm'
-            - run: git add . && git commit -m "clean"
+            - run: git add . && git commit -m "clean" || echo "No changes to commit"
             - run: npm version patch
             - name: Configure Git to use SSH key
               run: |
