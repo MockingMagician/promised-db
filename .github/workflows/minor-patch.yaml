@@ -26,12 +26,12 @@ jobs:
                   mkdir -p ~/.ssh
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/pk
                   chmod 600 ~/.ssh/pk
-                  ssh-keyscan github.com >> ~/.ssh/known_hosts
-                  echo ~/.ssh/pk
                   
                   # Start the SSH agent and add the key
                   eval "$(ssh-agent -s)"
                   ssh-add ~/.ssh/pk
+                  ssh-keyscan github.com >> ~/.ssh/known_hosts
+                  echo ~/.ssh/pk
                   
                   # Debugging steps
                   echo "Contents of ~/.ssh directory:"
