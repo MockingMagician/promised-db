@@ -34,7 +34,7 @@ jobs:
                   echo ~/.ssh/pk
                   
                   # test
-                  ssh -T git@github.com -i ~/.ssh/pk
+#                  ssh -T git@github.com -i ~/.ssh/pk
                   
                   # Debugging steps
                   echo "Contents of ~/.ssh directory:"
@@ -50,6 +50,9 @@ jobs:
                   git config --global user.email 'moreau.marc.web@gmail.comm'
             - run: git add . && git commit -m "clean"
             - run: npm version patch
+            - name: Configure Git to use SSH key
+              run: |
+                  git config core.sshCommand 'ssh -i ~/.ssh/pk -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
             - name: Push changes
               run: |
                   git remote set-url origin git@github.com:${{ github.repository }}.git
