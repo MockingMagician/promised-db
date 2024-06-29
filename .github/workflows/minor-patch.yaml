@@ -36,4 +36,5 @@ jobs:
             - run: npm version patch
             - name: Push changes
               run: |
+                  git remote set-url origin git@github.com:${{ github.repository }}.git
                   git push origin main --follow-tags
