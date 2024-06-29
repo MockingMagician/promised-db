@@ -33,9 +33,6 @@ jobs:
                   ssh-keyscan github.com >> ~/.ssh/known_hosts
                   echo ~/.ssh/pk
                   
-                  # test
-#                  ssh -T git@github.com -i ~/.ssh/pk
-                  
                   # Debugging steps
                   echo "Contents of ~/.ssh directory:"
                   ls -la ~/.ssh
