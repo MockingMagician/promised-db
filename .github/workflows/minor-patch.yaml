@@ -27,6 +27,18 @@ jobs:
                   echo "$SSH_PRIVATE_KEY" > ~/.ssh/pk
                   chmod 600 ~/.ssh/pk
                   ssh-keyscan github.com >> ~/.ssh/known_hosts
+                  
+                  # Start the SSH agent and add the key
+                  eval "$(ssh-agent -s)"
+                  ssh-add ~/.ssh/id_rsa
+                  
+                  # Debugging steps
+                  echo "Contents of ~/.ssh directory:"
+                  ls -la ~/.ssh
+                  echo "Contents of known_hosts:"
+                  cat ~/.ssh/known_hosts
+            - name: Test SSH connection
+              run: ssh -T git@github.com || exit 1
             - run: npm ci
             - run: npm run build
             - run: |
