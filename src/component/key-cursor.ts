@@ -1,4 +1,8 @@
-import {IndexInterface, KeyCursorInterface, ObjectStoreInterface} from '@/component/interface/components.interface'
+import {
+    IndexInterface,
+    KeyCursorInterface,
+    ObjectStoreInterface,
+} from '@/component/interface/components.interface'
 import { requestResolver } from '@/global/request-resolver'
 
 export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>

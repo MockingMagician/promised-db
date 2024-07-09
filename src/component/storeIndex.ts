@@ -59,7 +59,11 @@ export class StoreIndex implements IndexInterface {
         direction?: IDBCursorDirection
     ): ValueCursorInterface<PK, K, R> {
         const request = this.ctx.index.openCursor(query, direction)
-        return new ValueCursor<PK, K, R>({ request, direction, source: new StoreIndex( {index: this.ctx.index} ) })
+        return new ValueCursor<PK, K, R>({
+            request,
+            direction,
+            source: new StoreIndex({ index: this.ctx.index }),
+        })
     }
 
     openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
@@ -67,6 +71,10 @@ export class StoreIndex implements IndexInterface {
         direction?: IDBCursorDirection
     ): KeyCursorInterface<PK, K, R> {
         const request = this.ctx.index.openKeyCursor(query, direction)
-        return new KeyCursor<PK, K, R>({ request, direction, source: new StoreIndex( {index: this.ctx.index} )  })
+        return new KeyCursor<PK, K, R>({
+            request,
+            direction,
+            source: new StoreIndex({ index: this.ctx.index }),
+        })
     }
 }

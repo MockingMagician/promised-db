@@ -1,5 +1,5 @@
 import { Transaction } from '@/component/transaction'
-import {Database} from "@/component/database";
+import { Database } from '@/component/database'
 
 export type CurrentVersionUpgrade = number
 
@@ -19,9 +19,9 @@ export class DatabaseFactory {
             return this._factory
         }
         if (typeof window !== 'undefined') {
-            return this._factory = window.indexedDB
+            return (this._factory = window.indexedDB)
         }
-        return this._factory = new IDBFactory()
+        return (this._factory = new IDBFactory())
     }
 
     static cmp<T>(a: T, b: T): number {
