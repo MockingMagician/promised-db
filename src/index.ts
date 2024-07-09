@@ -6,7 +6,6 @@ import * as storeIndex from './component/storeIndex';
 import * as transaction from './component/transaction';
 import * as valueCursor from './component/value-cursor';
 import * as databaseFactory from './database-factory';
-import * as requestResolver from './global/request-resolver';
 export {
 database,
 componentsInterface,
@@ -15,6 +14,5 @@ objectStore,
 storeIndex,
 transaction,
 valueCursor,
-databaseFactory,
-requestResolver
+databaseFactory
 };

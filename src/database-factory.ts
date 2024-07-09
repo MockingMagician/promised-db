@@ -13,20 +13,28 @@ export interface VersionUpgradeInterface {
 }
 
 export class DatabaseFactory {
-    private static readonly factory: IDBFactory =
-        global.window?.indexedDB || new IDBFactory()
+    private static _factory: IDBFactory
+    private static readonly factory: () => IDBFactory = () => {
+        if (this._factory) {
+            return this._factory
+        }
+        if (typeof window !== 'undefined') {
+            return this._factory = window.indexedDB
+        }
+        return this._factory = new IDBFactory()
+    }
 
     static cmp<T>(a: T, b: T): number {
-        return this.factory.cmp(a, b)
+        return this.factory().cmp(a, b)
     }
 
     static databases(): Promise<IDBDatabaseInfo[]> {
-        return this.factory.databases()
+        return this.factory().databases()
     }
 
     static deleteDatabase(name: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            const request = this.factory.deleteDatabase(name)
+            const request = this.factory().deleteDatabase(name)
             request.addEventListener('success', () => {
                 resolve()
             })
@@ -48,7 +56,7 @@ export class DatabaseFactory {
         versionUpgrades: VersionUpgradeInterface[] = []
     ): Promise<Database> {
         return new Promise((resolve, reject) => {
-            const request: IDBOpenDBRequest = this.factory.open(name, version)
+            const request: IDBOpenDBRequest = this.factory().open(name, version)
 
             request.addEventListener('success', (event) => {
                 const target = event.target as IDBOpenDBRequest
