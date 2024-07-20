@@ -7,37 +7,24 @@ import {
 import { StoreIndex } from '@/component/storeIndex'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
+import {requestResolver} from "@/global/request-resolver";
 
 export class ObjectStore implements ObjectStoreInterface {
     constructor(private readonly ctx: { objectStore: IDBObjectStore }) {}
 
-    private resolveIDBRequest<V>(request: IDBRequest): Promise<V> {
-        return new Promise((resolve, reject) => {
-            request.addEventListener('success', (event) => {
-                const target = event.target as IDBRequest
-                resolve(target.result)
-            })
-            /* istanbul ignore next */
-            request.addEventListener('error', (event) => {
-                const target = event.target as IDBRequest
-                reject(target.error)
-            })
-        })
-    }
-
     add<V, K extends IDBValidKey>(value: V, key?: K): Promise<void> {
         const request = this.ctx.objectStore.add(value, key)
-        return this.resolveIDBRequest(request)
+        return requestResolver<IDBValidKey>(request).then(() => void 0)
     }
 
     clear(): Promise<void> {
         const request = this.ctx.objectStore.clear()
-        return this.resolveIDBRequest(request)
+        return requestResolver<undefined>(request)
     }
 
     count<K extends IDBValidKey>(query?: IDBKeyRange | K): Promise<number> {
         const request = this.ctx.objectStore.count(query)
-        return this.resolveIDBRequest(request)
+        return requestResolver<number>(request)
     }
 
     createIndex(
@@ -55,7 +42,7 @@ export class ObjectStore implements ObjectStoreInterface {
 
     delete<K extends IDBValidKey>(query: IDBKeyRange | K): Promise<void> {
         const request = this.ctx.objectStore.delete(query)
-        return this.resolveIDBRequest(request)
+        return requestResolver<undefined>(request)
     }
 
     deleteIndex(name: string): void {
@@ -64,7 +51,7 @@ export class ObjectStore implements ObjectStoreInterface {
 
     get<R, K extends IDBValidKey>(key: K): Promise<R> {
         const request = this.ctx.objectStore.get(key)
-        return this.resolveIDBRequest<R>(request)
+        return requestResolver<R>(request)
     }
 
     getAll<R, K extends IDBValidKey>(
@@ -72,20 +59,20 @@ export class ObjectStore implements ObjectStoreInterface {
         count?: number
     ): Promise<R[]> {
         const request = this.ctx.objectStore.getAll(query, count)
-        return this.resolveIDBRequest<R[]>(request)
+        return requestResolver<R[]>(request)
     }
 
     getAllKeys<K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         count?: number
     ): Promise<K[]> {
-        const request = this.ctx.objectStore.getAllKeys(query, count)
-        return this.resolveIDBRequest<K[]>(request)
+        const request = this.ctx.objectStore.getAllKeys(query, count) as IDBRequest<K[]>
+        return requestResolver<K[]>(request)
     }
 
     getKey<K extends IDBValidKey>(key: IDBKeyRange | K): Promise<K> {
-        const request = this.ctx.objectStore.getKey(key)
-        return this.resolveIDBRequest<K>(request)
+        const request = this.ctx.objectStore.getKey(key) as IDBRequest<K>
+        return requestResolver<K>(request)
     }
 
     index(name: string): IndexInterface {
@@ -119,7 +106,7 @@ export class ObjectStore implements ObjectStoreInterface {
 
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void> {
         const request = this.ctx.objectStore.put(value, key)
-        return this.resolveIDBRequest(request)
+        return requestResolver<IDBValidKey>(request).then(() => void 0)
     }
 
     get indexNames(): string[] {
