@@ -5,8 +5,8 @@ import {
 } from '@/component/interface/components.interface'
 import { requestResolver } from '@/shared/request-resolver'
 
-export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
-    implements KeyCursorInterface<PK, K, R>
+export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey>
+    implements KeyCursorInterface<PK, K>
 {
     protected _cursor: IDBCursor | null
     protected _cursorPromise: Promise<IDBCursor | null>

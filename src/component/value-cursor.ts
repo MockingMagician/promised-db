@@ -3,7 +3,7 @@ import { KeyCursor } from '@/component/key-cursor'
 import { requestResolver } from '@/shared/request-resolver'
 
 export class ValueCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
-    extends KeyCursor<PK, K, R>
+    extends KeyCursor<PK, K>
     implements ValueCursorInterface<PK, K, R>
 {
     get value(): R | undefined {

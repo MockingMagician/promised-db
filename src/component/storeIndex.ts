@@ -66,12 +66,12 @@ export class StoreIndex implements IndexInterface {
         })
     }
 
-    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<PK, K, R> {
+    ): KeyCursorInterface<PK, K> {
         const request = this.ctx.index.openKeyCursor(query, direction)
-        return new KeyCursor<PK, K, R>({
+        return new KeyCursor<PK, K>({
             request,
             direction,
             source: new StoreIndex({ index: this.ctx.index }),
