@@ -54,4 +54,25 @@ describe('object store', () => {
             await objectStore.count(IDBKeyRange.bound(2, 4, true, true))
         ).toEqual(1)
     })
+
+    it('put should update value', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(3)
+        await objectStore.put({ id: 2, name: 'modified' })
+
+        expect(await objectStore.get(2)).toEqual({ id: 2, name: 'modified' })
+    })
+
+    it('clear store should be empty', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(5)
+        await objectStore.clear()
+
+        expect(await objectStore.count()).toEqual(0)
+    })
+
+    it('should delete', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(5)
+        await objectStore.delete(3)
+
+        expect(await objectStore.count()).toEqual(4)
+    })
 })
