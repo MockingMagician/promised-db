@@ -75,4 +75,10 @@ describe('object store', () => {
 
         expect(await objectStore.count()).toEqual(4)
     })
+
+    it('get indexes names', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.indexNames).toEqual(['name_idx'])
+    })
 })

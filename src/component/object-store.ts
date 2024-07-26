@@ -7,7 +7,7 @@ import {
 import { StoreIndex } from '@/component/storeIndex'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
-import { requestResolver } from '@/global/request-resolver'
+import { requestResolver } from '@/shared/request-resolver'
 
 export class ObjectStore implements ObjectStoreInterface {
     constructor(private readonly ctx: { objectStore: IDBObjectStore }) {}

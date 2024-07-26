@@ -3,7 +3,7 @@ import {
     KeyCursorInterface,
     ObjectStoreInterface,
 } from '@/component/interface/components.interface'
-import { requestResolver } from '@/global/request-resolver'
+import { requestResolver } from '@/shared/request-resolver'
 
 export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
     implements KeyCursorInterface<PK, K, R>
@@ -56,14 +56,6 @@ export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>
 
     continuePrimaryKey(key: K, primaryKey: PK): void {
         this.stepUp()?.continuePrimaryKey(key, primaryKey)
-    }
-
-    async delete(): Promise<void> {
-        await requestResolver<undefined>(this._cursor.delete())
-    }
-
-    async update(value: R): Promise<void> {
-        await requestResolver<IDBValidKey>(this._cursor.update(value))
     }
 
     private stepUp(): IDBCursor | null {

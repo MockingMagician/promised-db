@@ -39,10 +39,10 @@ export interface ObjectStoreInterface {
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
     ): ValueCursorInterface<PK, K, R>
-    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<PK, K, R>
+    ): KeyCursorInterface<PK, K>
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void>
     indexNames: string[]
 }
@@ -63,24 +63,25 @@ export interface IndexInterface {
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
     ): ValueCursorInterface<PK, K, R>
-    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
+    openKeyCursor<PK extends IDBValidKey, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
-    ): KeyCursorInterface<PK, K, R>
+    ): KeyCursorInterface<PK, K>
 }
 
 export interface ValueCursorInterface<
     PK extends IDBValidKey,
     K extends IDBValidKey,
     R,
-> extends KeyCursorInterface<PK, K, R> {
+> extends KeyCursorInterface<PK, K> {
     value: R | undefined
+    delete(): Promise<void>
+    update(value: R): Promise<void>
 }
 
 export interface KeyCursorInterface<
     PK extends IDBValidKey,
     K extends IDBValidKey,
-    R,
 > {
     primaryKey: PK | undefined
     key: K | undefined
@@ -90,8 +91,6 @@ export interface KeyCursorInterface<
     continue(key?: K): void
     advance(count: number): void
     continuePrimaryKey(key: K, primaryKey: PK): void
-    delete(): Promise<void>
-    update(value: R): Promise<void>
 }
 
 export interface TransactionInterface {
