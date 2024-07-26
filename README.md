@@ -3,6 +3,11 @@
 
 **@idxdb/promised** is a lightweight library that wraps the IndexedDB API, providing a more natural way to work with promises. It allows you to easily store and retrieve data in an indexed database using async/await syntax, making it easier to integrate with your existing codebase.
 
+**Dependencies**
+-------------
+
+This package has no dependencies.
+
 **Installation**
 --------------
 
@@ -12,11 +17,11 @@ To install this package, run the following command in your terminal:
 npm install @idxdb/promised
 ```
 
-**Usage**
+**Usage examples**
 ---------
 
 **Create database**
-```javascript
+```typescript
 import { DatabaseFactory } from '@idxdb/promised';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
@@ -25,7 +30,7 @@ const store = db.createObjectStore('users', { keyPath: 'id' });
 ```
 
 **Add some data**
-```javascript
+```typescript
 import { DatabaseFactory } from '@idxdb/promised';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
@@ -39,7 +44,7 @@ await tx.commit();
 ```
 
 **Fetch some data**
-```javascript
+```typescript
 import { DatabaseFactory } from '@idxdb/promised';
 
 const db = await DatabaseFactory.open('mydatabase', 1);
@@ -51,8 +56,24 @@ const result = await store.get(1);
 console.log(result.name); // "John Doe"
 ```
 
+**Iterate over cursor**
+```typescript
+import { DatabaseFactory } from '@idxdb/promised';
+
+const db = await DatabaseFactory.open('mydatabase', 1);
+
+const tx = db.transaction(['users'], "readonly");
+const store = tx.objectStore('users');
+const cursor = store.openCursor();
+
+while (!(await cursor.end())) {
+    console.log(cursor.value);
+    cursor.continue();
+}
+```
+
 **Manage database versions**
-```javascript
+```typescript
 import { DatabaseFactory } from '@idxdb/promised';
 
 const versions = [
@@ -80,13 +101,14 @@ const versions = [
     },
 ]
 
-const db = await DatabaseFactory.open('mydatabase', 2, versions);
+const db = await DatabaseFactory.open('mydatabase', 3, versions);
 ```
 
-**Dependencies**
--------------
+**And all the existing API**
 
-This package has no dependencies.
+The library implements all the methods of the IndexedDB API, you can find the documentation [here](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API).
+
+You can also find more examples in the [tests](https://github.com/MockingMagician/promised-db/tree/main/test/component)
 
 **Contributing**
 ------------
