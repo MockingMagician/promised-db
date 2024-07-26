@@ -7,7 +7,7 @@ import {
 import { StoreIndex } from '@/component/storeIndex'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
-import {requestResolver} from "@/global/request-resolver";
+import { requestResolver } from '@/global/request-resolver'
 
 export class ObjectStore implements ObjectStoreInterface {
     constructor(private readonly ctx: { objectStore: IDBObjectStore }) {}
@@ -66,7 +66,10 @@ export class ObjectStore implements ObjectStoreInterface {
         query?: IDBKeyRange | K,
         count?: number
     ): Promise<K[]> {
-        const request = this.ctx.objectStore.getAllKeys(query, count) as IDBRequest<K[]>
+        const request = this.ctx.objectStore.getAllKeys(
+            query,
+            count
+        ) as IDBRequest<K[]>
         return requestResolver<K[]>(request)
     }
 

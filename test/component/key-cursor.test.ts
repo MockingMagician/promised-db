@@ -1,4 +1,4 @@
-import {ComponentTestInitializer} from "../test-helpers/component-test.initializer";
+import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
 
 describe('key cursor', () => {
     const testInitializer = new ComponentTestInitializer()
@@ -21,7 +21,6 @@ describe('key cursor', () => {
     })
 
     describe('in index context', () => {
-
         it('cursor should iterate over keys', async () => {
             const objectStore = await testInitializer.prepareStoreContent(3)
 

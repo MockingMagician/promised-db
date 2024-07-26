@@ -1,4 +1,4 @@
-import {ComponentTestInitializer} from "../test-helpers/component-test.initializer";
+import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
 
 describe('transaction', () => {
     const testInitializer = new ComponentTestInitializer()
@@ -8,7 +8,10 @@ describe('transaction', () => {
     })
 
     it('abort transaction should not record entries', async () => {
-        const transaction = testInitializer.db.transaction(testInitializer.storeName, 'readwrite')
+        const transaction = testInitializer.db.transaction(
+            testInitializer.storeName,
+            'readwrite'
+        )
         const objectStore = transaction.objectStore(testInitializer.storeName)
         await objectStore.add(testInitializer.storeValue())
         await transaction.abort()

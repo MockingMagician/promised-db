@@ -1,4 +1,4 @@
-import {ComponentTestInitializer} from "../test-helpers/component-test.initializer";
+import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
 
 describe('object store', () => {
     const testInitializer = new ComponentTestInitializer()

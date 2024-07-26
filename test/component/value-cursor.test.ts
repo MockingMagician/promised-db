@@ -1,4 +1,4 @@
-import {ComponentTestInitializer} from "../test-helpers/component-test.initializer";
+import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
 
 describe('value cursor', () => {
     const testInitializer = new ComponentTestInitializer()

@@ -1,4 +1,4 @@
-import {ComponentTestInitializer} from "../test-helpers/component-test.initializer";
+import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
 
 describe('key cursor', () => {
     const testInitializer = new ComponentTestInitializer()
@@ -11,9 +11,7 @@ describe('key cursor', () => {
         const objectStore = await testInitializer.prepareStoreContent(5)
 
         expect(await objectStore.index('name_idx').count()).toEqual(5)
-        expect(await objectStore.index('name_idx').count('test_3')).toEqual(
-            1
-        )
+        expect(await objectStore.index('name_idx').count('test_3')).toEqual(1)
     })
 
     it('should get', async () => {
@@ -37,9 +35,7 @@ describe('key cursor', () => {
     it('should get key', async () => {
         const objectStore = await testInitializer.prepareStoreContent(5)
 
-        expect(
-            await objectStore.index('name_idx').getKey('test_3')
-        ).toEqual(3)
+        expect(await objectStore.index('name_idx').getKey('test_3')).toEqual(3)
     })
 
     it('should get all keys', async () => {
