@@ -27,7 +27,8 @@
     "build": "ts-node ./generator/command/generate-root-index.ts && rimraf dist && tsc && tsc-alias",
     "lint": "eslint '{src,test}/**/*.{ts,tsx}'",
     "prettier": "eslint '{src,test}/**/*.{ts,tsx}' --fix",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "keywords": [
     "indexed DB",
