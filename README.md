@@ -3,6 +3,9 @@
 
 **@idxdb/promised** is a lightweight library that wraps the IndexedDB API, providing a more natural way to work with promises. It allows you to easily store and retrieve data in an indexed database using async/await syntax, making it easier to integrate with your existing codebase.
 
+[![test](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml/badge.svg)](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml)
+[![npm version](https://badge.fury.io/js/%40idxdb%2Fpromised.svg)](https://badge.fury.io/js/%40idxdb%2Fpromised)
+
 **Dependencies**
 -------------
 
