@@ -27,13 +27,38 @@ npm install @idxdb/promised
 **Usage examples**
 ---------
 
-**Create database**
+**Create and manage database versions**
 ```typescript
 import { DatabaseFactory } from '@idxdb/promised';
 
-const db = await DatabaseFactory.open('mydatabase', 1);
+const versions = [
+    {
+        version: 1,
+        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+            const store = db.createObjectStore('users', { keyPath: 'id' })
+            store.createIndex('name_idx', 'name', { unique: false });
+        },
+    },
+    {
+        version: 2,
+        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+            const store = transaction.objectStore('users')
+            store.createIndex('email_idx', 'email', { unique: true })
+        },
+    },
+    {
+        version: 3,
+        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+            const store = transaction.objectStore('users')
+            store.createIndex('identifier_idx', 'identifier', { unique: true })
+            store.deleteIndex('email_idx')
+        },
+    },
+]
 
-const store = db.createObjectStore('users', { keyPath: 'id' });
+const requestedVersion = 3;
+
+const db = await DatabaseFactory.open('mydatabase', requestedVersion, versions);
 ```
 
 **Add some data**
@@ -77,38 +102,6 @@ while (!(await cursor.end())) {
     console.log(cursor.value);
     cursor.continue();
 }
-```
-
-**Manage database versions**
-```typescript
-import { DatabaseFactory } from '@idxdb/promised';
-
-const versions = [
-    {
-        version: 1,
-        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
-            const store = db.createObjectStore('users', { keyPath: 'id' })
-            store.createIndex('name_idx', 'name', { unique: false });
-        },
-    },
-    {
-        version: 2,
-        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
-            const store = transaction.objectStore('users')
-            store.createIndex('email_idx', 'email', { unique: true })
-        },
-    },
-    {
-        version: 3,
-        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
-            const store = transaction.objectStore('users')
-            store.createIndex('identifier_idx', 'identifier', { unique: true })
-            store.deleteIndex('email_idx')
-        },
-    },
-]
-
-const db = await DatabaseFactory.open('mydatabase', 3, versions);
 ```
 
 **And all the existing API**
