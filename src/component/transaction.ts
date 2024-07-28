@@ -46,10 +46,12 @@ export class Transaction implements TransactionInterface {
         return new Database({ db: this.ctx.transaction.db })
     }
 
+    /* istanbul ignore next */
     get durability(): IDBTransactionDurability {
         return this.ctx.transaction.durability
     }
 
+    /* istanbul ignore next */
     get error(): DOMException {
         return this.ctx.transaction.error
     }

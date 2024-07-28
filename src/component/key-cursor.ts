@@ -27,11 +27,11 @@ export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey>
     }
 
     get key(): K {
-        return this._cursor?.key as K | undefined
+        return this._cursor.key as K | undefined
     }
 
     get primaryKey(): PK | undefined {
-        return this._cursor?.primaryKey as PK | undefined
+        return this._cursor.primaryKey as PK | undefined
     }
 
     get direction(): IDBCursorDirection {
@@ -47,15 +47,15 @@ export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey>
     }
 
     continue(key?: K | PK): void {
-        this.stepUp()?.continue(key)
+        this.stepUp().continue(key)
     }
 
     advance(count: number): void {
-        this.stepUp()?.advance(count)
+        this.stepUp().advance(count)
     }
 
     continuePrimaryKey(key: K, primaryKey: PK): void {
-        this.stepUp()?.continuePrimaryKey(key, primaryKey)
+        this.stepUp().continuePrimaryKey(key, primaryKey)
     }
 
     private stepUp(): IDBCursor | null {

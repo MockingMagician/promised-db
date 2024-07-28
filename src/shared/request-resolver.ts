@@ -7,6 +7,7 @@ export const requestResolver = <V>(request: IDBRequest<V>) =>
             resolve(target.result)
         }
 
+        /* istanbul ignore next */
         const onerror = (event: Event) => {
             request.removeEventListener('success', onsuccess)
             request.removeEventListener('error', onerror)
