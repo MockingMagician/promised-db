@@ -1,5 +1,5 @@
-import * as fs from 'fs'
-import * as path from 'path'
+import fs from 'fs'
+import path from 'path'
 
 const directoryPath = path.join(__dirname, '../../src')
 const indexFile = path.join(directoryPath, 'index.ts')
