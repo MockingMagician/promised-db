@@ -5,32 +5,19 @@ import {
 } from '@/component/interface/components.interface'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
+import {requestResolver} from "@/shared/request-resolver";
 
 export class StoreIndex implements IndexInterface {
     constructor(private readonly ctx: { index: IDBIndex }) {}
 
-    private resolveIDBRequest<V>(request: IDBRequest): Promise<V> {
-        return new Promise((resolve, reject) => {
-            request.addEventListener('success', (event) => {
-                const target = event.target as IDBRequest
-                resolve(target.result)
-            })
-            /* istanbul ignore next */
-            request.addEventListener('error', (event) => {
-                const target = event.target as IDBRequest
-                reject(target.error)
-            })
-        })
-    }
-
     count<K extends IDBValidKey>(query?: IDBKeyRange | K): Promise<number> {
         const request = this.ctx.index.count(query)
-        return this.resolveIDBRequest(request)
+        return requestResolver(request)
     }
 
     get<R, K extends IDBValidKey>(key: K): Promise<R> {
         const request = this.ctx.index.get(key)
-        return this.resolveIDBRequest<R>(request)
+        return requestResolver(request)
     }
 
     getAll<R, K extends IDBValidKey>(
@@ -38,7 +25,7 @@ export class StoreIndex implements IndexInterface {
         count?: number
     ): Promise<R[]> {
         const request = this.ctx.index.getAll(query, count)
-        return this.resolveIDBRequest<R[]>(request)
+        return requestResolver<R[]>(request)
     }
 
     getAllKeys<K extends IDBValidKey>(
@@ -46,12 +33,12 @@ export class StoreIndex implements IndexInterface {
         count?: number
     ): Promise<K[]> {
         const request = this.ctx.index.getAllKeys(query, count)
-        return this.resolveIDBRequest<K[]>(request)
+        return requestResolver<K[]>(request as IDBRequest<K[]>)
     }
 
     getKey<K extends IDBValidKey>(key: IDBKeyRange | K): Promise<K> {
         const request = this.ctx.index.getKey(key)
-        return this.resolveIDBRequest<K>(request)
+        return requestResolver<K>(request as IDBRequest<K>)
     }
 
     openCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(

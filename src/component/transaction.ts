@@ -31,6 +31,7 @@ export class Transaction implements TransactionInterface {
                 const target = event.target as IDBTransaction
                 reject(target.error)
             })
+            this.ctx.transaction.commit()
         })
     }
     objectStore(name: string): ObjectStoreInterface {
