@@ -5,7 +5,7 @@ import {
 } from '@/component/interface/components.interface'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
-import {requestResolver} from "@/shared/request-resolver";
+import { requestResolver } from '@/shared/request-resolver'
 
 export class StoreIndex implements IndexInterface {
     constructor(private readonly ctx: { index: IDBIndex }) {}
