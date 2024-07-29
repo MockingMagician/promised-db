@@ -9,6 +9,7 @@
 [![npm version](https://badge.fury.io/js/%40idxdb%2Fpromised.svg)](https://badge.fury.io/js/%40idxdb%2Fpromised)
 [![Known Vulnerabilities](https://snyk.io/test/github/MockingMagician/promised-db/badge.svg)](https://snyk.io/test/github/MockingMagician/promised-db)
 [![dependencies](https://img.shields.io/badge/dependencies-free-white.svg)](https://shields.io/)
+![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/MockingMagician/promised-db)
 
 **Dependencies**
 -------------
