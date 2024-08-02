@@ -4,7 +4,7 @@ import {
     ObjectStoreInterface,
     ValueCursorInterface,
 } from '@/component/interface/components.interface'
-import { StoreIndex } from '@/component/storeIndex'
+import { StoreIndex } from '@/component/store-index'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
 import { requestResolver } from '@/shared/request-resolver'
@@ -37,7 +37,7 @@ export class ObjectStore implements ObjectStoreInterface {
             keyPath,
             options
         )
-        return new StoreIndex({ index })
+        return new StoreIndex({ index, objectStore: this })
     }
 
     delete<K extends IDBValidKey>(query: IDBKeyRange | K): Promise<void> {
@@ -80,7 +80,7 @@ export class ObjectStore implements ObjectStoreInterface {
 
     index(name: string): IndexInterface {
         const index = this.ctx.objectStore.index(name)
-        return new StoreIndex({ index })
+        return new StoreIndex({ index, objectStore: this })
     }
 
     openCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(

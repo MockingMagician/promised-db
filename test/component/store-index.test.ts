@@ -45,4 +45,34 @@ describe('key cursor', () => {
             1, 2, 3, 4, 5,
         ])
     })
+
+    it('should get keyPath', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.index('name_idx').keyPath).toEqual('name')
+    })
+
+    it('should get multiEntry', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.index('name_idx').multiEntry).toEqual(false)
+    })
+
+    it('should get name', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.index('name_idx').name).toEqual('name_idx')
+    })
+
+    it('should get unique', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.index('name_idx').unique).toEqual(false)
+    })
+
+    it('should get objectStore', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.index('name_idx').objectStore).toEqual(objectStore)
+    })
 })

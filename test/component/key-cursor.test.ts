@@ -1,5 +1,5 @@
 import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
-import { StoreIndex } from '../../src/component/storeIndex'
+import { StoreIndex } from '../../src/component/store-index'
 import { ObjectStore } from '../../src/component/object-store'
 
 describe('key cursor', () => {
@@ -22,8 +22,14 @@ describe('key cursor', () => {
         expect(it).toEqual(3)
     })
 
+    it('should get request', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+        const cursor = objectStore.openKeyCursor()
+        expect(cursor.request).toBeInstanceOf(IDBRequest)
+    })
+
     it('return objectStore source', async () => {
-        const objectStore = await testInitializer.prepareStoreContent(3)
+        const objectStore = await testInitializer.prepareStoreContent(0)
 
         const cursor = objectStore.openKeyCursor()
         expect(cursor.source).toBeInstanceOf(ObjectStore)

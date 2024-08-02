@@ -48,6 +48,11 @@ export interface ObjectStoreInterface {
 }
 
 export interface IndexInterface {
+    keyPath: string | string[]
+    multiEntry: boolean
+    name: string
+    objectStore: ObjectStoreInterface
+    unique: boolean
     count<K extends IDBValidKey>(query?: IDBKeyRange | K): Promise<number>
     get<R, K extends IDBValidKey>(key: K): Promise<R>
     getAll<R, K extends IDBValidKey>(
@@ -87,6 +92,7 @@ export interface KeyCursorInterface<
     key: K | undefined
     direction: IDBCursorDirection
     source: ObjectStoreInterface | IndexInterface
+    request: IDBRequest<IDBCursor>
     end(): Promise<boolean>
     continue(key?: K): void
     advance(count: number): void

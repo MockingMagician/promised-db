@@ -1,6 +1,7 @@
 import {
     IndexInterface,
     KeyCursorInterface,
+    ObjectStoreInterface,
     ValueCursorInterface,
 } from '@/component/interface/components.interface'
 import { ValueCursor } from '@/component/value-cursor'
@@ -8,7 +9,32 @@ import { KeyCursor } from '@/component/key-cursor'
 import { requestResolver } from '@/shared/request-resolver'
 
 export class StoreIndex implements IndexInterface {
-    constructor(private readonly ctx: { index: IDBIndex }) {}
+    constructor(
+        private readonly ctx: {
+            index: IDBIndex
+            objectStore: ObjectStoreInterface
+        }
+    ) {}
+
+    get keyPath(): string | string[] {
+        return this.ctx.index.keyPath
+    }
+
+    get multiEntry(): boolean {
+        return this.ctx.index.multiEntry
+    }
+
+    get name(): string {
+        return this.ctx.index.name
+    }
+
+    get unique(): boolean {
+        return this.ctx.index.unique
+    }
+
+    get objectStore(): ObjectStoreInterface {
+        return this.ctx.objectStore
+    }
 
     count<K extends IDBValidKey>(query?: IDBKeyRange | K): Promise<number> {
         const request = this.ctx.index.count(query)
@@ -49,7 +75,10 @@ export class StoreIndex implements IndexInterface {
         return new ValueCursor<PK, K, R>({
             request,
             direction,
-            source: new StoreIndex({ index: this.ctx.index }),
+            source: new StoreIndex({
+                index: this.ctx.index,
+                objectStore: this.ctx.objectStore,
+            }),
         })
     }
 
@@ -61,7 +90,10 @@ export class StoreIndex implements IndexInterface {
         return new KeyCursor<PK, K>({
             request,
             direction,
-            source: new StoreIndex({ index: this.ctx.index }),
+            source: new StoreIndex({
+                index: this.ctx.index,
+                objectStore: this.ctx.objectStore,
+            }),
         })
     }
 }

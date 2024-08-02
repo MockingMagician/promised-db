@@ -26,6 +26,10 @@ export class KeyCursor<PK extends IDBValidKey, K extends IDBValidKey>
         })
     }
 
+    get request(): IDBRequest<IDBCursor> {
+        return this._cursor?.request || this.ctx.request
+    }
+
     get key(): K {
         return this._cursor.key as K | undefined
     }
