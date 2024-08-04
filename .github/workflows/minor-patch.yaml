@@ -1,13 +1,12 @@
 name: Publish Regular Patch
 
 on:
-#    workflow_dispatch:
-
     schedule:
-        - cron: '*/5 * * * *'
-#    push:
-#        branches:
-#            - main
+        - cron: '*/2 * * * *'
+    workflow_dispatch:
+    push:
+        branches:
+            - main
 
 jobs:
     test:
