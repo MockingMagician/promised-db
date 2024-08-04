@@ -2,7 +2,7 @@ name: Publish Regular Patch
 
 on:
     schedule:
-        - cron: '*/2 * * * *'
+        - cron: '*/44 * * * *'
 #    workflow_dispatch:
 #    push:
 #        branches:
