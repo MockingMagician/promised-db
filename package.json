@@ -1,6 +1,6 @@
 {
   "name": "@idxdb/promised",
-  "version": "2.0.33",
+  "version": "2.0.34",
   "description": "Promised version of indexed DB that simplify usage",
   "main": "/dist/src/index.js",
   "types": "dist/src/index.d.ts",
