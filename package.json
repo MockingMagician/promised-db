@@ -1,7 +1,7 @@
 {
   "name": "@idxdb/promised",
   "version": "2.0.36",
-  "description": "Promised version of indexed DB that simplify usage",
+  "description": "@idxdb/promised is a lightweight library that wraps the IndexedDB API, providing a more natural way to work with promises. It allows you to easily store and retrieve data in an indexed database using async/await syntax, making it easier to integrate with your existing codebase.",
   "main": "/dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "publishConfig": {
