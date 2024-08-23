@@ -12,27 +12,47 @@
 ![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/MockingMagician/promised-db)
 
 **Dependencies**
--------------
+---------
 
 This package has no dependencies.
 
 **Installation**
---------------
+---------
 
 To install this package, run the following command in your terminal:
+
+With npm
 
 ```
 npm install @idxdb/promised
 ```
 
-**Usage examples**
+With yarn
+
+```
+yarn add @idxdb/promised
+```
+
+**Foreword**
 ---------
 
-**Create and manage database versions**
+This package fully respects the original indexedDB API.
+
+The only subtleties are:
+
+- database initialization, to support migrations during version upgrades.
+
+- in the cursors, which allow more natural iteration than the original API.
+
+**Usage - API**
+---------
+
+**Database initialization and migration management**
+
 ```typescript
 import { DatabaseFactory } from '@idxdb/promised';
 
-const versions = [
+const migrations = [
     {
         version: 1,
         upgrade: async ({db, transaction, currentVersionUpgrade}) => {
@@ -59,7 +79,7 @@ const versions = [
 
 const requestedVersion = 3;
 
-const db = await DatabaseFactory.open('mydatabase', requestedVersion, versions);
+const db = await DatabaseFactory.open('mydatabase', requestedVersion, migrations);
 ```
 
 **Add some data**
