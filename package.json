@@ -1,6 +1,6 @@
 {
   "name": "@idxdb/promised",
-  "version": "2.3.4528",
+  "version": "2.3.4529",
   "description": "@idxdb/promised wraps the IndexedDB API. It allows you to easily store and retrieve data in an indexed db database using async/await syntax, making it easier to integrate with your existing codebase.",
   "main": "/dist/src/index.js",
   "types": "dist/src/index.d.ts",
