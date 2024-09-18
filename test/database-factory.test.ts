@@ -65,6 +65,21 @@ describe('DatabaseFactory', () => {
         db.close()
     })
 
+    it('should throw an error when requested a new version of db while already using it', async () => {
+        const dbName = randomString(25)
+        await DatabaseFactory.open(dbName, 1)
+        await expect(DatabaseFactory.open(dbName, 2)).rejects.toThrow()
+    })
+
+    it('should NOT throw an error if requested a new version and the previous was closed', async () => {
+        const dbName = randomString(25)
+        const db = await DatabaseFactory.open(dbName, 1)
+        db.close()
+        await expect(DatabaseFactory.open(dbName, 2)).resolves.toBeInstanceOf(
+            Database
+        )
+    })
+
     it('should delete databases', async () => {
         const dbName = randomString(25)
         const db = await DatabaseFactory.open(dbName)

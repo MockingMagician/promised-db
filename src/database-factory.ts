@@ -70,6 +70,15 @@ export class DatabaseFactory {
                 reject(target.error)
             })
 
+            request.addEventListener('blocked', (event) => {
+                const oldVersion = event.oldVersion
+                const newVersion = event.newVersion
+                const error = new Error(
+                    `You are not allowed to upgrade the database when it is already active. Prevented from reopening the ${name} database in version ${newVersion} when the current version is ${oldVersion}.`
+                )
+                reject(error)
+            })
+
             request.addEventListener('upgradeneeded', async (event) => {
                 const target = event.target as IDBOpenDBRequest
                 const db = target.result
