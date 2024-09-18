@@ -88,7 +88,7 @@ export class DatabaseFactory {
                 )
 
                 for (const upgrade of versionUpgrades) {
-                    if (event.oldVersion < upgrade.version) {
+                    if (event.oldVersion < upgrade.version && upgrade.version <= version) {
                         /* istanbul ignore next */
                         const handleReject = (event: Event) => {
                             const target = event.target as IDBOpenDBRequest

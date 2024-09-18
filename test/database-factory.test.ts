@@ -14,12 +14,13 @@ describe('DatabaseFactory', () => {
         expect(database).toBeInstanceOf(Database)
     })
 
-    it('should open a database with version upgrade', async () => {
+    it('should open a database with version upgrade up to the requested version', async () => {
         const versionUpgradeOrder: number[] = []
         const storeToDeleteInAFutureVersion = randomString(25)
         const indexToDeleteInAFutureVersion = randomString(25)
+        const dbName = randomString(25)
 
-        const db = await DatabaseFactory.open(randomString(10), 2, [
+        const migrations = [
             {
                 version: 1,
                 upgrade: async ({ db, currentVersionUpgrade }) => {
@@ -59,9 +60,18 @@ describe('DatabaseFactory', () => {
                     versionUpgradeOrder.push(currentVersionUpgrade)
                 },
             },
-        ])
+        ]
+
+        let db = await DatabaseFactory.open(dbName, 2, migrations)
         expect(db).toBeDefined()
-        expect(versionUpgradeOrder).toEqual([1, 2, 3, 4])
+        expect(versionUpgradeOrder).toEqual([1, 2])
+
+        db.close()
+        versionUpgradeOrder.length = 0 // reset array
+
+        db = await DatabaseFactory.open(dbName, 4, migrations)
+        expect(db).toBeDefined()
+        expect(versionUpgradeOrder).toEqual([3, 4])
         db.close()
     })
 
