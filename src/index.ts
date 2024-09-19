@@ -1,20 +1,8 @@
-import * as database from './component/database';
-import * as componentsInterface from './component/interface/components.interface';
-import * as keyCursor from './component/key-cursor';
-import * as objectStore from './component/object-store';
-import * as storeIndex from './component/store-index';
-import * as transaction from './component/transaction';
-import * as valueCursor from './component/value-cursor';
-import * as databaseFactory from './database-factory';
-import * as requestResolver from './shared/request-resolver';
-export {
-database,
-componentsInterface,
-keyCursor,
-objectStore,
-storeIndex,
-transaction,
-valueCursor,
-databaseFactory,
-requestResolver
-};
+export * from './component/database'
+export * from './component/interface/components.interface'
+export * from './component/key-cursor'
+export * from './component/object-store'
+export * from './component/store-index'
+export * from './component/transaction'
+export * from './component/value-cursor'
+export * from './database-factory'
