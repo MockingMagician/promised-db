@@ -1,6 +1,6 @@
 import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
-import { StoreIndex } from '../../src/component/store-index'
-import { ObjectStore } from '../../src/component/object-store'
+import { StoreIndex } from '../../src'
+import { ObjectStore } from '../../src'
 
 describe('key cursor', () => {
     const testInitializer = new ComponentTestInitializer()

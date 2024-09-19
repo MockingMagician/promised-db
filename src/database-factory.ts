@@ -18,6 +18,7 @@ export class DatabaseFactory {
         if (this._factory) {
             return this._factory
         }
+        console.log('self', self)
         /* istanbul ignore next */
         if (typeof self !== 'undefined') {
             return (this._factory = self.indexedDB)
