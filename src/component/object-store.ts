@@ -13,8 +13,8 @@ export class ObjectStore implements ObjectStoreInterface {
     constructor(private readonly ctx: { objectStore: IDBObjectStore }) {}
 
     add<V, K extends IDBValidKey>(value: V, key?: K): Promise<K> {
-        const request = this.ctx.objectStore.add(value, key)
-        return requestResolver<IDBValidKey>(request)
+        const request = this.ctx.objectStore.add(value, key) as IDBRequest<K>
+        return requestResolver<K>(request)
     }
 
     clear(): Promise<void> {

@@ -76,6 +76,13 @@ describe('object store', () => {
         expect(await objectStore.count()).toEqual(4)
     })
 
+    it('add should return key', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+        const key = await objectStore.add(testInitializer.storeValue(123))
+
+        expect(key).toEqual(123)
+    })
+
     it('get indexes names', async () => {
         const objectStore = await testInitializer.prepareStoreContent(0)
 
