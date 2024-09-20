@@ -12,9 +12,9 @@ import { requestResolver } from '@/shared/request-resolver'
 export class ObjectStore implements ObjectStoreInterface {
     constructor(private readonly ctx: { objectStore: IDBObjectStore }) {}
 
-    add<V, K extends IDBValidKey>(value: V, key?: K): Promise<void> {
+    add<V, K extends IDBValidKey>(value: V, key?: K): Promise<K> {
         const request = this.ctx.objectStore.add(value, key)
-        return requestResolver<IDBValidKey>(request).then(() => void 0)
+        return requestResolver<IDBValidKey>(request)
     }
 
     clear(): Promise<void> {
