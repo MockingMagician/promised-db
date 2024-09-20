@@ -61,7 +61,7 @@ export interface DatabaseInterface {
 }
 
 export interface ObjectStoreInterface {
-    add<V, K extends IDBValidKey>(value: V, key?: K): Promise<void>
+    add<V, K extends IDBValidKey>(value: V, key?: K): Promise<K>
     clear(): Promise<void>
     count<K extends IDBValidKey>(query?: IDBKeyRange | K): Promise<number>
     createIndex(
