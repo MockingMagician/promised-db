@@ -1,12 +1,16 @@
-import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
-import { StoreIndex } from '../../src/component/store-index'
-import { ObjectStore } from '../../src/component/object-store'
+import { ComponentTestInitializer } from '../../test-helpers/component-test.initializer'
+import { StoreIndex } from '../../../src'
+import { ObjectStore } from '../../../src'
 
 describe('key cursor', () => {
     const testInitializer = new ComponentTestInitializer()
 
     beforeEach(async () => {
         await testInitializer.initialize()
+    })
+
+    afterEach(async () => {
+        testInitializer.db.close()
     })
 
     it('cursor should iterate over keys', async () => {

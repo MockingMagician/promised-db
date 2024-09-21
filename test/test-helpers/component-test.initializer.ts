@@ -1,7 +1,7 @@
 require('fake-indexeddb/auto')
-import { DatabaseInterface } from '../../src/component/interface/components.interface'
+import { DatabaseInterface } from '../../src'
 import { randomString } from './random-string'
-import { DatabaseFactory } from '../../src/database-factory'
+import { DatabaseFactory } from '../../src'
 
 export class ComponentTestInitializer {
     private _db: DatabaseInterface
@@ -22,7 +22,7 @@ export class ComponentTestInitializer {
         this._db = await DatabaseFactory.open(randomString(25), 1, [
             {
                 version: 1,
-                upgrade: async ({ db }) => {
+                migration: async ({ db }) => {
                     const store = db.createObjectStore(this.storeName, {
                         keyPath: 'id',
                         autoIncrement: true,

@@ -2,8 +2,9 @@
   "name": "@idxdb/promised",
   "version": "3.1.0",
   "description": "@idxdb/promised wraps the IndexedDB API. It allows you to easily store and retrieve data in an indexed db database using async/await syntax, making it easier to integrate with your existing codebase.",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": "./dist/src/index.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "provenance": true,
@@ -24,11 +25,12 @@
     "/dist"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc && tsc-alias",
+    "build": "rimraf dist && tsc && tsc-alias --resolve-full-paths",
     "lint": "eslint '{src,test}/**/*.{ts,tsx}'",
     "prettier": "eslint '{src,test}/**/*.{ts,tsx}' --fix",
-    "test": "jest",
-    "coverage": "jest --coverage"
+    "test-unit": "jest -c jest.unit.config.js ./test/unit",
+    "test-browser": "npm run build && jest -c jest.browser.config.js ./test/browser",
+    "coverage": "jest -c jest.unit.config.js ./test/unit --coverage"
   },
   "keywords": [
     "indexed DB",
@@ -41,6 +43,7 @@
   "author": "Marc MOREAU",
   "license": "ISC",
   "devDependencies": {
+    "@esbuild-kit/esm-loader": "^2.6.5",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.2",
     "@typescript-eslint/eslint-plugin": "^7.13.0",
@@ -56,6 +59,10 @@
     "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
-    "typescript": "^5.4.5"
+    "tsx": "^4.19.1",
+    "typescript": "^5.4.5",
+    "jest-playwright": "^0.0.1",
+    "jest-playwright-preset": "^4.0.0",
+    "playwright": "^1.47.1"
   }
 }

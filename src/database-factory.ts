@@ -1,16 +1,23 @@
 import { Transaction } from '@/component/transaction'
 import { Database } from '@/component/database'
 
-export type CurrentVersionUpgrade = number
+export type MigrationVersion = number
 
-export interface VersionUpgradeInterface {
-    version: CurrentVersionUpgrade
-    upgrade: (upgradeCtx: {
+export interface MigrationInterface {
+    version: MigrationVersion
+    migration: (migrationCtx: {
         db: Database
         transaction: Transaction
-        currentVersionUpgrade: CurrentVersionUpgrade
+        dbOldVersion: number
+        dbNewVersion: number
+        migrationVersion: MigrationVersion
     }) => Promise<void>
 }
+
+export type OnBlocked = (ctx: {
+    oldVersion: number
+    newVersion: number
+}) => Promise<Error | string>
 
 export class DatabaseFactory {
     private static _factory: IDBFactory
@@ -54,7 +61,8 @@ export class DatabaseFactory {
     static open(
         name: string,
         version: number = 1,
-        versionUpgrades: VersionUpgradeInterface[] = []
+        migrations: MigrationInterface[] = [],
+        onBlocked?: OnBlocked
     ): Promise<Database> {
         return new Promise((resolve, reject) => {
             const request: IDBOpenDBRequest = this.factory().open(name, version)
@@ -70,35 +78,50 @@ export class DatabaseFactory {
                 reject(target.error)
             })
 
-            request.addEventListener('blocked', (event) => {
+            request.addEventListener('blocked', async (event) => {
                 const oldVersion = event.oldVersion
                 const newVersion = event.newVersion
-                const error = new Error(
-                    `You are not allowed to upgrade the database when it is already active. Prevented from reopening the ${name} database in version ${newVersion} when the current version is ${oldVersion}.`
-                )
-                reject(error)
+
+                if (!onBlocked) {
+                    const error = new Error(
+                        `You are not allowed to upgrade the database when it is already active. Prevented from reopening the ${name} database in version ${newVersion} when the current version is ${oldVersion}.`
+                    )
+                    reject(error)
+                    return
+                }
+
+                onBlocked({ oldVersion, newVersion })
+                    .then((result) => {
+                        reject(result)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    })
             })
 
             request.addEventListener('upgradeneeded', async (event) => {
                 const target = event.target as IDBOpenDBRequest
                 const db = target.result
                 const transaction = target.transaction as IDBTransaction
-                versionUpgrades = versionUpgrades.sort(
-                    (a, b) => a.version - b.version
-                )
+                migrations = migrations.sort((a, b) => a.version - b.version)
 
-                for (const upgrade of versionUpgrades) {
-                    if (event.oldVersion < upgrade.version && upgrade.version <= version) {
+                for (const migration of migrations) {
+                    if (
+                        event.oldVersion < migration.version &&
+                        migration.version <= version
+                    ) {
                         /* istanbul ignore next */
                         const handleReject = (event: Event) => {
                             const target = event.target as IDBOpenDBRequest
                             reject(target.error)
                         }
                         db.addEventListener('error', handleReject)
-                        await upgrade.upgrade({
+                        await migration.migration({
                             db: new Database({ db }),
                             transaction: new Transaction({ transaction }),
-                            currentVersionUpgrade: upgrade.version,
+                            dbOldVersion: event.oldVersion,
+                            dbNewVersion: event.newVersion,
+                            migrationVersion: migration.version,
                         })
                         db.removeEventListener('error', handleReject)
                     }

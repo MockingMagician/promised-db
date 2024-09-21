@@ -1,7 +1,7 @@
 require('fake-indexeddb/auto')
-import { DatabaseFactory } from '../src/database-factory'
-import { Database } from '../src/component/database'
-import { randomString } from './test-helpers/random-string'
+import { DatabaseFactory, MigrationInterface, OnBlocked } from '../../src'
+import { Database } from '../../src'
+import { randomString } from '../test-helpers/random-string'
 
 describe('DatabaseFactory', () => {
     it('should compare keys', () => {
@@ -12,6 +12,7 @@ describe('DatabaseFactory', () => {
     it('should open a database', async () => {
         const database = await DatabaseFactory.open(randomString(25))
         expect(database).toBeInstanceOf(Database)
+        database.close()
     })
 
     it('should open a database with version upgrade up to the requested version', async () => {
@@ -20,44 +21,44 @@ describe('DatabaseFactory', () => {
         const indexToDeleteInAFutureVersion = randomString(25)
         const dbName = randomString(25)
 
-        const migrations = [
+        const migrations: MigrationInterface[] = [
             {
                 version: 1,
-                upgrade: async ({ db, currentVersionUpgrade }) => {
+                migration: async ({ db, migrationVersion }) => {
                     const store = db.createObjectStore('test')
                     // very long process
                     for (let i = 0; i < 100; i++) {
                         store.createIndex(randomString(50), randomString(50))
                     }
-                    versionUpgradeOrder.push(currentVersionUpgrade)
+                    versionUpgradeOrder.push(migrationVersion)
                 },
             },
             {
                 version: 2,
-                upgrade: async ({ db, currentVersionUpgrade }) => {
+                migration: async ({ db, migrationVersion }) => {
                     db.createObjectStore(storeToDeleteInAFutureVersion)
-                    versionUpgradeOrder.push(currentVersionUpgrade)
+                    versionUpgradeOrder.push(migrationVersion)
                 },
             },
             {
                 version: 3,
-                upgrade: async ({ db, currentVersionUpgrade }) => {
+                migration: async ({ db, migrationVersion }) => {
                     db.deleteObjectStore(storeToDeleteInAFutureVersion)
                     const store = db.createObjectStore('test2')
                     store.createIndex(
                         indexToDeleteInAFutureVersion,
                         randomString(50)
                     )
-                    versionUpgradeOrder.push(currentVersionUpgrade)
+                    versionUpgradeOrder.push(migrationVersion)
                 },
             },
             {
                 version: 4,
-                upgrade: async ({ transaction, currentVersionUpgrade }) => {
+                migration: async ({ transaction, migrationVersion }) => {
                     transaction
                         .objectStore('test2')
                         .deleteIndex(indexToDeleteInAFutureVersion)
-                    versionUpgradeOrder.push(currentVersionUpgrade)
+                    versionUpgradeOrder.push(migrationVersion)
                 },
             },
         ]
@@ -77,8 +78,9 @@ describe('DatabaseFactory', () => {
 
     it('should throw an error when requested a new version of db while already using it', async () => {
         const dbName = randomString(25)
-        await DatabaseFactory.open(dbName, 1)
+        const db = await DatabaseFactory.open(dbName, 1)
         await expect(DatabaseFactory.open(dbName, 2)).rejects.toThrow()
+        db.close()
     })
 
     it('should NOT throw an error if requested a new version and the previous was closed', async () => {
@@ -88,6 +90,31 @@ describe('DatabaseFactory', () => {
         await expect(DatabaseFactory.open(dbName, 2)).resolves.toBeInstanceOf(
             Database
         )
+    })
+
+    it('should manage when requested a new version of db while already using it', async () => {
+        const dbName = randomString(25)
+        const db = await DatabaseFactory.open(dbName, 1)
+
+        const onBlocked: OnBlocked = async ({ oldVersion, newVersion }) => {
+            // warn other tabs to close the db
+            db.close()
+            return `informed to close the db version ${oldVersion} before opening version ${newVersion}`
+        }
+
+        const retryOpenDB = await DatabaseFactory.open(
+            dbName,
+            2,
+            [],
+            onBlocked
+        ).catch((error) => {
+            expect(error).toEqual(
+                'informed to close the db version 1 before opening version 2'
+            )
+            return DatabaseFactory.open(dbName, 2)
+        })
+
+        expect(retryOpenDB).toBeInstanceOf(Database)
     })
 
     it('should delete databases', async () => {
@@ -124,7 +151,7 @@ describe('DatabaseFactory', () => {
         const db = await DatabaseFactory.open(dbName, 1, [
             {
                 version: 1,
-                upgrade: async ({ db }) => {
+                migration: async ({ db }) => {
                     db.createObjectStore('store1')
                     db.createObjectStore('store2')
                 },

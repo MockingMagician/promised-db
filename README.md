@@ -169,21 +169,21 @@ import { DatabaseFactory } from '@idxdb/promised';
 const migrations = [
     {
         version: 1,
-        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+        migration: async ({db, transaction, dbOldVersion, dbNewVersion, migrationVersion}) => {
             const store = db.createObjectStore('users', { keyPath: 'id' })
             store.createIndex('name_idx', 'name', { unique: false });
         },
     },
     {
         version: 2,
-        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+        migration: async ({db, transaction, dbOldVersion, dbNewVersion, migrationVersion}) => {
             const store = transaction.objectStore('users')
             store.createIndex('email_idx', 'email', { unique: true })
         },
     },
     {
         version: 3,
-        upgrade: async ({db, transaction, currentVersionUpgrade}) => {
+        migration: async ({db, transaction, dbOldVersion, dbNewVersion, migrationVersion}) => {
             const store = transaction.objectStore('users')
             store.createIndex('identifier_idx', 'identifier', { unique: true })
             store.deleteIndex('email_idx')
@@ -194,6 +194,69 @@ const migrations = [
 const requestedVersion = 3;
 
 const db = await DatabaseFactory.open('mydatabase', requestedVersion, migrations);
+```
+
+**What if I don't have any migrations to keep up to date and I just delete my DB every time I change?**
+
+All you have to do is keep one migration and you're done.
+
+```typescript
+import { DatabaseFactory } from '@idxdb/promised';
+
+const requestedVersion = 3; // the version you want to open, increase to open anew one and reset your DB scheme
+
+const migrations = [
+    {
+        version: requestedVersion,
+        migration: async ({db, transaction, dbOldVersion, dbNewVersion, migrationVersion}) => {
+            for (const store of db.objectStoreNames) {
+                db.deleteObjectStore(store) // correctly delete all previous existing stores
+            }
+            // creates the fresh new stores and their indexes
+            const store = db.createObjectStore('users', { keyPath: 'id' })
+            store.createIndex('name_idx', 'name', { unique: false });
+            //...
+        },
+    },
+]
+
+
+const db = await DatabaseFactory.open('mydatabase', requestedVersion, migrations);
+```
+
+**What happens if my DB is already open and I try to open another version?**
+
+A basic error message will inform you that the operation is impossible. However, you can take control by adding a handler for the `blocked` event and perform the actions you deem necessary:
+
+- Warn the user
+- Inform other tabs
+- ...
+
+```typescript
+import { DatabaseFactory } from '@idxdb/promised';
+
+let db = await DatabaseFactory.open(dbName, 1)
+
+const bc = new BroadcastChannel('idxdb_channel')
+
+bc.onmessage = (event) => {
+    if (event.data.action === 'close-db') {
+        db.close();
+    }
+}
+
+const onBlocked = async ({ oldVersion, newVersion }) => {
+    // warn other tabs to close the db
+    bc.postMessage({ action: 'close-db' });
+    return 'close-db-emitted'
+}
+
+db = await DatabaseFactory.open(dbName, 2, [], onBlocked).catch((error) => {
+    if (error === 'close-db-emitted') {
+        // retry the open
+        return  DatabaseFactory.open(dbName, 2)
+    }
+})
 ```
 
 **Add some data**

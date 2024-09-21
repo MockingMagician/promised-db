@@ -1,11 +1,15 @@
-import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
-import { Database } from '../../src/component/database'
+import { ComponentTestInitializer } from '../../test-helpers/component-test.initializer'
+import { Database } from '../../../src'
 
 describe('transaction', () => {
     const testInitializer = new ComponentTestInitializer()
 
     beforeEach(async () => {
         await testInitializer.initialize()
+    })
+
+    afterEach(async () => {
+        testInitializer.db.close()
     })
 
     it('abort transaction should not record entries', async () => {

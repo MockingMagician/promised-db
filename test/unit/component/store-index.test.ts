@@ -1,10 +1,14 @@
-import { ComponentTestInitializer } from '../test-helpers/component-test.initializer'
+import { ComponentTestInitializer } from '../../test-helpers/component-test.initializer'
 
 describe('key cursor', () => {
     const testInitializer = new ComponentTestInitializer()
 
     beforeEach(async () => {
         await testInitializer.initialize()
+    })
+
+    afterEach(async () => {
+        testInitializer.db.close()
     })
 
     it('should count', async () => {
