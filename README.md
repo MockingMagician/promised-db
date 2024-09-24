@@ -6,10 +6,10 @@
 [![codecov](https://codecov.io/gh/MockingMagician/promised-db/branch/main/graph/badge.svg)](https://codecov.io/gh/MockingMagician/promised-db)
 [![test](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml/badge.svg)](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
-![NPM Version](https://img.shields.io/npm/v/%40idxdb%2Fpromised)
+[![NPM Version](https://img.shields.io/npm/v/@idxdb/promised)](https://www.npmjs.com/package/@idxdb/promised)
 [![Known Vulnerabilities](https://snyk.io/test/github/MockingMagician/promised-db/badge.svg)](https://snyk.io/test/github/MockingMagician/promised-db)
 [![dependencies](https://img.shields.io/badge/dependencies-free-white.svg)](https://shields.io/)
-![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/MockingMagician/promised-db)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/MockingMagician/promised-db)](https://codeclimate.com/github/MockingMagician/promised-db)
 
 **Dependencies**
 ---------
