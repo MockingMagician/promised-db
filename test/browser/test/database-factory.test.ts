@@ -1,11 +1,12 @@
-import type { DatabaseFactory as DF } from '../../src'
+import type { DatabaseFactory as DF } from '../../../src'
 import {
     InWebBrowserContext,
     performInWebBrowserContext,
-} from '../test-helpers/web-browser-context'
+} from '../../test-helpers/web-browser-context'
+import { test, expect } from '@playwright/test';
 
-describe('browser environment', () => {
-    it('can create a database and record into it', async () => {
+test.describe('browser environment', () => {
+    test('can create a database and record into it', async ({ page }) => {
         const toPerform: InWebBrowserContext<
             { id: number; name: string }[]
         > = async (df: typeof DF) => {
@@ -36,6 +37,7 @@ describe('browser environment', () => {
 
         const data =
             await performInWebBrowserContext<{ id: number; name: string }[]>(
+                page,
                 toPerform
             )
 

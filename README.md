@@ -44,6 +44,9 @@ The only subtleties are:
 
 - in the cursors, which allow more natural iteration than the original API.
 
+<details>
+  <summary>Detailed interfaces</summary>
+
 ```typescript
 export interface DatabaseInterface {
     close(): void
@@ -157,6 +160,9 @@ export interface TransactionInterface {
     mode: IDBTransactionMode
 }
 ```
+</details>
+
+
 
 **Usage - API**
 ---------

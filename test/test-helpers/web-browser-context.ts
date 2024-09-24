@@ -1,15 +1,15 @@
 import type { DatabaseFactory as DF } from '../../src'
-import type { Page } from 'playwright'
+import {Page} from "@playwright/test";
 
-declare let page: Page
 declare let DatabaseFactory: typeof DF
 
 export type InWebBrowserContext<R> = (databaseFactory: typeof DF) => Promise<R>
 
 export const performInWebBrowserContext = async <R>(
+    page: Page,
     inWebBrowser: InWebBrowserContext<R>
 ): Promise<R> => {
-    await page.goto('file://' + __dirname + '/../browser/empty.html')
+    await page.goto('/')
     return await page.evaluate<R, string>(
         async (inWebBrowserStringified: string): Promise<R> => {
             const inWebBrowser = eval(

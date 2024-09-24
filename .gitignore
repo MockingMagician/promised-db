@@ -6,3 +6,5 @@ dist
 !.prettierrc.json
 coverage
 !.github
+/test-results/
+/playwright-report/
