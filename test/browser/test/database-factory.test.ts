@@ -3,7 +3,7 @@ import {
     InWebBrowserContext,
     performInWebBrowserContext,
 } from '../../test-helpers/web-browser-context'
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@playwright/test'
 
 test.describe('browser environment', () => {
     test('can create a database and record into it', async ({ page }) => {
@@ -35,11 +35,9 @@ test.describe('browser environment', () => {
             return all as { id: number; name: string }[]
         }
 
-        const data =
-            await performInWebBrowserContext<{ id: number; name: string }[]>(
-                page,
-                toPerform
-            )
+        const data = await performInWebBrowserContext<
+            { id: number; name: string }[]
+        >(page, toPerform)
 
         expect(data).toEqual([{ id: 1, name: 'test' }])
     })

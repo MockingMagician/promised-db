@@ -8,3 +8,5 @@ coverage
 !.github
 /test-results/
 /playwright-report/
+!/.eslintignore
+!/.prettierignore

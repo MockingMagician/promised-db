@@ -1,5 +1,5 @@
 import type { DatabaseFactory as DF } from '../../src'
-import {Page} from "@playwright/test";
+import { Page } from '@playwright/test'
 
 declare let DatabaseFactory: typeof DF
 
