@@ -1,3 +1,4 @@
+/*eslint no-undef: "error"*/
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
