@@ -2,13 +2,13 @@
 
 **@idxdb/promised** is a lightweight library that wraps the IndexedDB API, providing a more natural way to work with promises. It allows you to easily store and retrieve data in an indexed database using async/await syntax, making it easier to integrate with your existing codebase.
 
-[![codecov](https://codecov.io/gh/MockingMagician/promised-db/branch/main/graph/badge.svg)](https://codecov.io/gh/MockingMagician/promised-db)
-[![test](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml/badge.svg)](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 [![NPM Version](https://img.shields.io/npm/v/@idxdb/promised)](https://www.npmjs.com/package/@idxdb/promised)
-[![Known Vulnerabilities](https://snyk.io/test/github/MockingMagician/promised-db/badge.svg)](https://snyk.io/test/github/MockingMagician/promised-db)
 [![dependencies](https://img.shields.io/badge/dependencies-free-white.svg)](https://shields.io/)
-[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/MockingMagician/promised-db)](https://codeclimate.com/github/MockingMagician/promised-db)
+[![Known Vulnerabilities](https://snyk.io/test/github/MockingMagician/promised-db/badge.svg)](https://snyk.io/test/github/MockingMagician/promised-db)
+[![test](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml/badge.svg)](https://github.com/MockingMagician/promised-db/actions/workflows/test-and-deploy.yaml)
+[![codecov](https://codecov.io/gh/MockingMagician/promised-db/branch/main/graph/badge.svg)](https://codecov.io/gh/MockingMagician/promised-db)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/e840ba7190714112b4a7ad6bd54fed68)](https://app.codacy.com/gh/MockingMagician/promised-db/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ## Dependencies
 
