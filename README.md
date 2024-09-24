@@ -46,7 +46,6 @@ Once loaded, a DatabaseFactory object will be available in the global scope, all
 
 This allows you to use **@idxdb/promised** without the need to download it locally or set up a bundler like Webpack or Rollup.
 
-
 ## Foreword
 
 This package fully respects the original indexedDB API.
@@ -332,9 +331,9 @@ You can also find more examples in the [tests](https://github.com/MockingMagicia
 
 If you'd like to contribute to this package, please follow these steps:
 
-* Fork this repository
-* Make your changes and commit them
-* Create a pull request with a detailed description of the changes
+- Fork this repository
+- Make your changes and commit them
+- Create a pull request with a detailed description of the changes
 
 ## License
 

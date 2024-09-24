@@ -1,4 +1,4 @@
-import {defineConfig, devices} from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig({
     // Look for test files in the "tests" directory, relative to this configuration file.
@@ -37,12 +37,11 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
             },
-
         },
         {
             name: 'firefox',
             use: {
-                ...devices['Desktop Firefox']
+                ...devices['Desktop Firefox'],
             },
         },
         {
@@ -68,14 +67,14 @@ export default defineConfig({
             use: {
                 ...devices['Desktop Chrome'],
                 channel: 'chrome',
-            }
+            },
         },
         {
             name: 'Microsoft Edge',
             use: {
                 ...devices['Desktop Edge'],
                 channel: 'msedge',
-            }
+            },
         },
     ],
-});
+})
