@@ -172,8 +172,8 @@ export interface TransactionInterface {
     mode: IDBTransactionMode
 }
 ```
-</details>
 
+</details>
 
 ## Usage - API
 
