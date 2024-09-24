@@ -10,11 +10,11 @@
 [![dependencies](https://img.shields.io/badge/dependencies-free-white.svg)](https://shields.io/)
 [![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/MockingMagician/promised-db)](https://codeclimate.com/github/MockingMagician/promised-db)
 
-# Dependencies
+## Dependencies
 
 This package has no dependencies.
 
-# Installation
+## Installation
 
 To install this package, run the following command in your terminal:
 
@@ -30,11 +30,11 @@ npm install @idxdb/promised
 yarn add @idxdb/promised
 ```
 
-## ESM Module
+### ESM Module
 
 **@idxdb/promised** is an ECMAScript (ESM) module, which means it can be directly imported in environments that support modules, such as modern browsers or Node.js with ESM enabled.
 
-### Usage in the Browser
+#### Usage in the Browser
 
 You can load the module directly from a CDN using the following code:
 
@@ -47,7 +47,7 @@ Once loaded, a DatabaseFactory object will be available in the global scope, all
 This allows you to use **@idxdb/promised** without the need to download it locally or set up a bundler like Webpack or Rollup.
 
 
-# Foreword
+## Foreword
 
 This package fully respects the original indexedDB API.
 
@@ -176,9 +176,9 @@ export interface TransactionInterface {
 </details>
 
 
-# Usage - API
+## Usage - API
 
-## Database initialization and migration management
+### Database initialization and migration management
 
 ```typescript
 import { DatabaseFactory } from '@idxdb/promised';
@@ -213,7 +213,7 @@ const requestedVersion = 3;
 const db = await DatabaseFactory.open('mydatabase', requestedVersion, migrations);
 ```
 
-### What if I don't have any migrations to keep up to date and I just delete my DB every time I change?
+#### What if I don't have any migrations to keep up to date and I just delete my DB every time I change?
 
 All you have to do is keep one migration and you're done.
 
@@ -241,7 +241,7 @@ const migrations = [
 const db = await DatabaseFactory.open('mydatabase', requestedVersion, migrations);
 ```
 
-### What happens if my DB is already open and I try to open another version?
+#### What happens if my DB is already open and I try to open another version?
 
 A basic error message will inform you that the operation is impossible. However, you can take control by adding a handler for the `blocked` event and perform the actions you deem necessary:
 
@@ -276,7 +276,7 @@ db = await DatabaseFactory.open(dbName, 2, [], onBlocked).catch((error) => {
 })
 ```
 
-## Add some data
+### Add some data
 
 ```typescript
 import { DatabaseFactory } from '@idxdb/promised';
@@ -291,7 +291,7 @@ store.add({ id: 1, name: 'Jane Doe' });
 await tx.commit();
 ```
 
-## Fetch some data
+### Fetch some data
 
 ```typescript
 import { DatabaseFactory } from '@idxdb/promised';
@@ -305,7 +305,7 @@ const result = await store.get(1);
 console.log(result.name); // "John Doe"
 ```
 
-## Iterate over cursor
+### Iterate over cursor
 
 ```typescript
 import { DatabaseFactory } from '@idxdb/promised';
@@ -322,13 +322,13 @@ while (!(await cursor.end())) {
 }
 ```
 
-## And all the existing API
+### And all the existing API
 
 The library implements all the methods of the IndexedDB API, you can find the documentation [here](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API).
 
 You can also find more examples in the [tests](https://github.com/MockingMagician/promised-db/tree/main/test/unit/component)
 
-# Contributing
+## Contributing
 
 If you'd like to contribute to this package, please follow these steps:
 
@@ -336,14 +336,14 @@ If you'd like to contribute to this package, please follow these steps:
 * Make your changes and commit them
 * Create a pull request with a detailed description of the changes
 
-# License
+## License
 
 This package is licensed under ISC. See the LICENSE file for more information.
 
-# Contact
+## Contact
 
 If you have any questions or need further assistance, please feel free to reach out to me at [Marc MOREAU](mailto:moreau.marc.web@gmail.com).
 
-# Versioning
+## Versioning
 
 This package uses [SemVer](https://semver.org/) for versioning. For the versions available, see the tags on this repository.
