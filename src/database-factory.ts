@@ -25,11 +25,20 @@ export class DatabaseFactory {
         if (this._factory) {
             return this._factory
         }
+
         /* istanbul ignore next */
-        if (typeof globalThis !== 'undefined') {
-            return (this._factory = globalThis.indexedDB || globalThis.mozIndexedDB || globalThis.webkitIndexedDB || globalThis.msIndexedDB)
+        this._factory =
+            globalThis.indexedDB ||
+            globalThis.mozIndexedDB ||
+            globalThis.webkitIndexedDB ||
+            globalThis.msIndexedDB
+
+        /* istanbul ignore next */
+        if (!this._factory) {
+            throw new Error('IndexedDB is not supported in your environment')
         }
-        return (this._factory = new IDBFactory())
+
+        return this._factory
     }
 
     static cmp<T>(a: T, b: T): number {

@@ -17,6 +17,6 @@ declare interface Worker {
 declare let globalThis: Window | Worker
 
 /* istanbul ignore next */
-if (typeof self !== 'undefined') {
+if (typeof globalThis !== 'undefined') {
     globalThis.DatabaseFactory = DatabaseFactory
 }
