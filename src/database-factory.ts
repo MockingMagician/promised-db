@@ -26,8 +26,8 @@ export class DatabaseFactory {
             return this._factory
         }
         /* istanbul ignore next */
-        if (typeof self !== 'undefined') {
-            return (this._factory = self.indexedDB)
+        if (typeof globalThis !== 'undefined') {
+            return (this._factory = globalThis.indexedDB || globalThis.mozIndexedDB || globalThis.webkitIndexedDB || globalThis.msIndexedDB)
         }
         return (this._factory = new IDBFactory())
     }

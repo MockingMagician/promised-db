@@ -10,10 +10,13 @@ export * from '@/database-factory'
 declare interface Window {
     DatabaseFactory: typeof DatabaseFactory
 }
+declare interface Worker {
+    DatabaseFactory: typeof DatabaseFactory
+}
 
-declare let self: Window | undefined
+declare let globalThis: Window | Worker
 
 /* istanbul ignore next */
 if (typeof self !== 'undefined') {
-    self.DatabaseFactory = DatabaseFactory
+    globalThis.DatabaseFactory = DatabaseFactory
 }
