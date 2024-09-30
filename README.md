@@ -14,6 +14,28 @@
 
 This package has no dependencies.
 
+## Table of Contents
+
+- [Installation](#installation)
+    - [With npm](#with-npm)
+    - [With yarn](#with-yarn)
+    - [ESM Module](#esm-module)
+        - [Usage in the Browser](#usage-in-the-browser)
+- [Foreword](#foreword)
+- [Usage - API](#usage---api)
+    - [Database initialization and migration management](#database-initialization-and-migration-management)
+    - [What if I don't have any migrations?](#what-if-i-dont-have-any-migrations)
+    - [What happens if my DB is already open and I try to open another version?](#what-happens-if-my-db-is-already-open-and-i-try-to-open-another-version)
+    - [Add some data](#add-some-data)
+    - [Fetch some data](#fetch-some-data)
+    - [Iterate over cursor](#iterate-over-cursor)
+    - [And all the existing API](#and-all-the-existing-api)
+- [⚠️ WARNING: Asynchronous Context and IndexedDB Transactions](#️-warning-asynchronous-context-and-indexeddb-transactions)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+- [Versioning](#versioning)
+
 ## Installation
 
 To install this package, run the following command in your terminal:
@@ -326,6 +348,30 @@ while (!(await cursor.end())) {
 The library implements all the methods of the IndexedDB API, you can find the documentation [here](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API).
 
 You can also find more examples in the [tests](https://github.com/MockingMagician/promised-db/tree/main/test/unit/component)
+
+## ⚠️ WARNING: Asynchronous Context and IndexedDB Transactions
+
+When working with IndexedDB transactions, it is critical to be aware of how asynchronous functions interact with the event loop. If you initiate a transaction and then call any function that triggers the event loop (such as `setTimeout`, `fetch`, or similar asynchronous operations), IndexedDB will automatically close the ongoing transaction. This behavior can lead to unexpected errors, particularly if the transaction is closed before all operations are completed.
+
+For example:
+
+```typescript
+import { DatabaseFactory } from '@idxdb/promised';
+
+const db = await DatabaseFactory.open('mydatabase', 1);
+const tx = db.transaction(['users'], 'readwrite');
+const store = tx.objectStore('users');
+
+// This may result in an error if fetch is called within the transaction
+fetch('/api/data').then((response) => {
+  return response.json();
+}).then((data) => {
+  store.add(data);
+});
+
+// The transaction may be automatically closed by the event loop before the store operation completes
+await tx.commit(); // Error: Transaction closed
+```
 
 ## Contributing
 
