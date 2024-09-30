@@ -4,6 +4,7 @@ import {
     performInWebBrowserContext,
 } from '../../test-helpers/web-browser-context'
 import { test, expect } from '@playwright/test'
+import {randomString} from "../../test-helpers/random-string";
 
 test.describe('browser environment', () => {
     test('can create a database and record into it', async ({ page }) => {
@@ -44,7 +45,7 @@ test.describe('browser environment', () => {
 
     test('async migration', async ({ page }) => {
         const toPerform: InWebBrowserContext<unknown> = async (df: typeof DF) => {
-            const name = 'Zotero'
+            const name = Math.random().toString(36).substring(3)
             const version = 1
 
             let db = await df.open(name, version, [{
