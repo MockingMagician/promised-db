@@ -78,9 +78,9 @@ test.describe('browser environment', () => {
             }])
 
             const existingStores = db.objectStoreNames
-            const dataSizeIneNewMetadataSore = await db.transaction('new_metadata_store_with_old_data').objectStore('new_metadata_store_with_old_data').count()
+            const dataSizeInNewMetadataSore = await db.transaction('new_metadata_store_with_old_data').objectStore('new_metadata_store_with_old_data').count()
 
-            return { existingStores, dataSizeIneNewMetadataSore }
+            return { existingStores, dataSizeInNewMetadataSore: dataSizeInNewMetadataSore }
         }
 
         const data = await performInWebBrowserContext<unknown>(page, toPerform)

@@ -31,13 +31,13 @@
     ],
     "scripts": {
         "build": "rimraf dist && tsc && tsc-alias --resolve-full-paths",
-        "coverage": "jest -c jest.config.js ./test/unit --coverage",
+        "coverage": "npm run test:unit -- --coverage",
         "full-check": "npm run build && npm run lint && npm run test-unit && npm run test-browser",
         "install-playwright": "npx playwright install --with-deps",
         "lint": "eslint '{src,test}/**/*.{ts,tsx}'",
         "prettier": "eslint '{src,test}/**/*.{ts,tsx}' --fix",
-        "test-browser": "npm run build && rimraf ./test/browser/serve/dist && cp -r ./dist ./test/browser/serve/dist && npx playwright test",
-        "test-unit": "jest -c jest.config.js ./test/unit"
+        "test:browser": "npm run build && rimraf ./test/browser/serve/dist && cp -r ./dist ./test/browser/serve/dist && npx playwright test",
+        "test:unit": "jest -c jest.config.js ./test/unit"
     },
     "devDependencies": {
         "@esbuild-kit/esm-loader": "^2.6.5",
