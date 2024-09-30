@@ -107,7 +107,79 @@ test.describe('browser environment', () => {
 
         expect(data).toEqual({
             existingStores: ['new_metadata_store_with_old_data'],
-            dataSizeIneNewMetadataSore: 10,
+            dataSizeInNewMetadataSore: 10,
+        })
+    })
+
+    test('async migration using cursor', async ({ page }) => {
+        const toPerform: InWebBrowserContext<unknown> = async (
+            df: typeof DF
+        ) => {
+            const name = Math.random().toString(36).substring(3)
+            const version = 1
+
+            let db = await df.open(name, version, [
+                {
+                    version: 1,
+                    migration: async ({ db }) => {
+                        db.createObjectStore('metadata', { keyPath: 'key' })
+                    },
+                },
+            ])
+
+            const transaction = db.transaction('metadata', 'readwrite')
+
+            for (let i = 0; i < 10; i++) {
+                await transaction
+                    .objectStore('metadata')
+                    .add({ key: i, value: i })
+            }
+
+            await transaction.commit()
+            db.close()
+
+            db = await df.open(name, version + 1, [
+                {
+                    version: 2,
+                    migration: async ({ db, transaction }) => {
+                        const newStore = db.createObjectStore(
+                            'new_metadata_store_with_old_data',
+                            { keyPath: 'key' }
+                        )
+                        const metadataStore =
+                            transaction.objectStore('metadata')
+                        const cursor = metadataStore.openCursor<
+                            string,
+                            string,
+                            { key: string; value: string }
+                        >()
+                        while (!(await cursor.end())) {
+                            const { key, value } = cursor.value
+                            await newStore.add({ key, value })
+                            cursor.continue()
+                        }
+                        db.deleteObjectStore('metadata')
+                    },
+                },
+            ])
+
+            const existingStores = db.objectStoreNames
+            const dataSizeInNewMetadataSore = await db
+                .transaction('new_metadata_store_with_old_data')
+                .objectStore('new_metadata_store_with_old_data')
+                .count()
+
+            return {
+                existingStores,
+                dataSizeInNewMetadataSore: dataSizeInNewMetadataSore,
+            }
+        }
+
+        const data = await performInWebBrowserContext<unknown>(page, toPerform)
+
+        expect(data).toEqual({
+            existingStores: ['new_metadata_store_with_old_data'],
+            dataSizeInNewMetadataSore: 10,
         })
     })
 })
