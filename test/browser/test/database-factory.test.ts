@@ -41,4 +41,52 @@ test.describe('browser environment', () => {
 
         expect(data).toEqual([{ id: 1, name: 'test' }])
     })
+
+    test('async migration', async ({ page }) => {
+        const toPerform: InWebBrowserContext<unknown> = async (df: typeof DF) => {
+            const name = 'Zotero'
+            const version = 1
+
+            let db = await df.open(name, version, [{
+                version: 1,
+                migration: async ({ db }) => {
+                    db.createObjectStore('metadata', { keyPath: 'key' })
+                },
+            }])
+
+            const transaction = db.transaction('metadata', 'readwrite')
+
+            for (let i = 0; i < 10; i++) {
+                await transaction.objectStore('metadata').add({ key: i, value: i })
+            }
+
+            await transaction.commit()
+            db.close()
+
+            db = await df.open(name, version + 1, [{
+                version: 2,
+                migration: async ({ db, transaction, dbOldVersion, dbNewVersion }) => {
+                    const newStore= db.createObjectStore('new_metadata_store_with_old_data', { keyPath: 'key' })
+                    const metadataStore = transaction.objectStore('metadata')
+                    const all = await metadataStore.getAll<{key: string, value: string}, string>()
+                    for (const { key, value } of all) {
+                        await newStore.add({ key, value })
+                    }
+                    db.deleteObjectStore('metadata')
+                },
+            }])
+
+            const existingStores = db.objectStoreNames
+            const dataSizeIneNewMetadataSore = await db.transaction('new_metadata_store_with_old_data').objectStore('new_metadata_store_with_old_data').count()
+
+            return { existingStores, dataSizeIneNewMetadataSore }
+        }
+
+        const data = await performInWebBrowserContext<unknown>(page, toPerform)
+
+        expect(data).toEqual({
+            existingStores: ['new_metadata_store_with_old_data'],
+            dataSizeIneNewMetadataSore: 10,
+        })
+    })
 })
