@@ -1,55 +1,72 @@
 import type { DatabaseFactory as DF } from '../../../src'
 import {
-    InWebBrowserContext,
-    performInWebBrowserContext,
+    executeInBrowser,
+    type ToExecuteInBrowser,
 } from '../../test-helpers/web-browser-context'
 import { test, expect } from '@playwright/test'
 
+declare const DatabaseFactory: typeof DF
+
+test.beforeEach(async ({ page }) => {
+    page.on('console', (msg) => {
+        console.log(msg.text())
+    })
+})
+
 test.describe('browser environment', () => {
     test('can create a database and record into it', async ({ page }) => {
-        const toPerform: InWebBrowserContext<
-            { id: number; name: string }[]
-        > = async (df: typeof DF) => {
-            const dbName = Math.random().toString(36).substring(3)
-            const db = await df.open(dbName, 1, [
+        const toExecute: ToExecuteInBrowser<[number], number> = async ([
+            quantity,
+        ]) => {
+            const db = await DatabaseFactory.open('test', 1, [
                 {
                     version: 1,
                     migration: async ({ db }) => {
-                        const store = db.createObjectStore('test', {
-                            keyPath: 'id',
-                            autoIncrement: true,
+                        const store = db.createObjectStore('metadata', {
+                            keyPath: 'key',
                         })
-                        store.createIndex('name_idx', 'name')
+                        let i = 0
+                        while (i++ < quantity) {
+                            await store.add({ key: i, value: i })
+                        }
                     },
                 },
             ])
-            await db
-                .transaction('test', 'readwrite')
-                .objectStore('test')
-                .add({ name: 'test' })
-            const all = await db
-                .transaction('test')
-                .objectStore('test')
-                .getAll()
+
+            const data = await db
+                .transaction('metadata')
+                .objectStore('metadata')
+                .count()
+
             db.close()
-            return all as { id: number; name: string }[]
+
+            return data
         }
 
-        const data = await performInWebBrowserContext<
-            { id: number; name: string }[]
-        >(page, toPerform)
+        const quantity = 1000
+        const recordSize = await executeInBrowser(page, toExecute, [
+            quantity,
+        ] as [number])
 
-        expect(data).toEqual([{ id: 1, name: 'test' }])
+        expect(recordSize).toBe(quantity)
     })
 
-    test('async migration', async ({ page }) => {
-        const toPerform: InWebBrowserContext<unknown> = async (
-            df: typeof DF
-        ) => {
+    test('async migration copy with get all from previous store', async ({
+        page,
+    }) => {
+        type ToExecuteReturn = {
+            existingStores: string[]
+            dataSizeInNewMetadataSore: number
+        }
+
+        const toExecute: ToExecuteInBrowser<
+            [number],
+            ToExecuteReturn
+        > = async ([quantity]) => {
             const name = Math.random().toString(36).substring(3)
             const version = 1
 
-            let db = await df.open(name, version, [
+            let db = await DatabaseFactory.open(name, version, [
                 {
                     version: 1,
                     migration: async ({ db }) => {
@@ -60,7 +77,7 @@ test.describe('browser environment', () => {
 
             const transaction = db.transaction('metadata', 'readwrite')
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < quantity; i++) {
                 await transaction
                     .objectStore('metadata')
                     .add({ key: i, value: i })
@@ -69,7 +86,7 @@ test.describe('browser environment', () => {
             await transaction.commit()
             db.close()
 
-            db = await df.open(name, version + 1, [
+            db = await DatabaseFactory.open(name, version + 1, [
                 {
                     version: 2,
                     migration: async ({ db, transaction }) => {
@@ -97,28 +114,43 @@ test.describe('browser environment', () => {
                 .objectStore('new_metadata_store_with_old_data')
                 .count()
 
-            return {
+            const toReturn = {
                 existingStores,
                 dataSizeInNewMetadataSore: dataSizeInNewMetadataSore,
             }
+
+            db.close()
+
+            return toReturn
         }
 
-        const data = await performInWebBrowserContext<unknown>(page, toPerform)
+        const quantity = 1000
+        const data = await executeInBrowser(page, toExecute, [quantity] as [
+            number,
+        ])
 
         expect(data).toEqual({
             existingStores: ['new_metadata_store_with_old_data'],
-            dataSizeInNewMetadataSore: 10,
+            dataSizeInNewMetadataSore: quantity,
         })
     })
 
-    test('async migration using cursor', async ({ page }) => {
-        const toPerform: InWebBrowserContext<unknown> = async (
-            df: typeof DF
-        ) => {
+    test('async migration copy with cursor from previous store', async ({
+        page,
+    }) => {
+        type ToExecuteReturn = {
+            existingStores: string[]
+            dataSizeInNewMetadataSore: number
+        }
+
+        const toExecute: ToExecuteInBrowser<
+            [number],
+            ToExecuteReturn
+        > = async ([quantity]) => {
             const name = Math.random().toString(36).substring(3)
             const version = 1
 
-            let db = await df.open(name, version, [
+            let db = await DatabaseFactory.open(name, version, [
                 {
                     version: 1,
                     migration: async ({ db }) => {
@@ -129,7 +161,7 @@ test.describe('browser environment', () => {
 
             const transaction = db.transaction('metadata', 'readwrite')
 
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < quantity; i++) {
                 await transaction
                     .objectStore('metadata')
                     .add({ key: i, value: i })
@@ -138,7 +170,7 @@ test.describe('browser environment', () => {
             await transaction.commit()
             db.close()
 
-            db = await df.open(name, version + 1, [
+            db = await DatabaseFactory.open(name, version + 1, [
                 {
                     version: 2,
                     migration: async ({ db, transaction }) => {
@@ -169,17 +201,24 @@ test.describe('browser environment', () => {
                 .objectStore('new_metadata_store_with_old_data')
                 .count()
 
-            return {
+            const toReturn = {
                 existingStores,
                 dataSizeInNewMetadataSore: dataSizeInNewMetadataSore,
             }
+
+            db.close()
+
+            return toReturn
         }
 
-        const data = await performInWebBrowserContext<unknown>(page, toPerform)
+        const quantity = 1000
+        const data = await executeInBrowser(page, toExecute, [quantity] as [
+            number,
+        ])
 
         expect(data).toEqual({
             existingStores: ['new_metadata_store_with_old_data'],
-            dataSizeInNewMetadataSore: 10,
+            dataSizeInNewMetadataSore: quantity,
         })
     })
 })
