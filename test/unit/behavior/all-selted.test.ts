@@ -1,6 +1,5 @@
 import { ComponentTestInitializer } from '../../test-helpers/component-test.initializer'
-import {DatabaseFactory} from '../../../src'
-import {randomUUID} from "node:crypto";
+import { DatabaseFactory } from '../../../src'
 
 describe('???', () => {
     const testInitializer = new ComponentTestInitializer()
@@ -17,13 +16,17 @@ describe('???', () => {
         const name = Math.random().toString(36).substring(3)
         const version = 1
 
-        let db = await DatabaseFactory.open(name, version, [
+        const db = await DatabaseFactory.open(name, version, [
             {
                 version: 1,
                 migration: async ({ db }) => {
-                    const store1 = db.createObjectStore('store1', { keyPath: 'key' })
+                    const store1 = db.createObjectStore('store1', {
+                        keyPath: 'key',
+                    })
                     store1.createIndex('itemID', 'itemID')
-                    const store2 = db.createObjectStore('store2', { keyPath: 'key' })
+                    const store2 = db.createObjectStore('store2', {
+                        keyPath: 'key',
+                    })
                     store2.createIndex('itemID', 'itemID')
                 },
             },
