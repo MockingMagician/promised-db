@@ -6,7 +6,9 @@ export * from '@/component/object-store'
 export * from '@/component/store-index'
 export * from '@/component/transaction'
 export * from '@/component/value-cursor'
+export * from '@/promise/synchronous-promise'
 export * from '@/database-factory'
+
 declare interface Window {
     DatabaseFactory: typeof DatabaseFactory
 }

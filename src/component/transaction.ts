@@ -22,6 +22,10 @@ export class Transaction implements TransactionInterface {
         })
     }
     commit(): Promise<void> {
+        if (this.ctx.transaction.commit === undefined) {
+            return
+        }
+
         return new Promise((resolve, reject) => {
             this.ctx.transaction.addEventListener('complete', () => {
                 resolve()

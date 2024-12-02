@@ -221,4 +221,62 @@ test.describe('browser environment', () => {
             dataSizeInNewMetadataSore: quantity,
         })
     })
+
+    test('data comme from outside fetch inside', async ({
+        page,
+    }) => {
+        type ToExecuteReturn = {
+            existingStores: string[]
+            metadataSize: number
+        }
+
+        const toExecute: ToExecuteInBrowser<
+            undefined,
+            ToExecuteReturn
+        > = async () => {
+            const name = Math.random().toString(36).substring(3)
+            const version = 1
+
+            const db = await DatabaseFactory.open(name, version, [
+                {
+                    version: 1,
+                    migration: async ({ db }) => {
+                        db.createObjectStore('metadata', { keyPath: 'key' })
+                    },
+                },
+            ])
+
+            await fetch('https://jsonplaceholder.typicode.com/todos/3').then(async response => {
+                const responseJson = await response.json()
+                const transaction = db.transaction('metadata', 'readwrite')
+                const objectStore = transaction.objectStore('metadata')
+                await objectStore.add({ key: 1, value: responseJson })
+                await transaction.commit()
+            })
+
+            const existingStores = db.objectStoreNames
+            const dataSize = await db
+                .transaction('metadata')
+                .objectStore('metadata')
+                .count()
+
+            const toReturn = {
+                existingStores,
+                metadataSize: dataSize,
+            }
+
+            db.close()
+
+            return toReturn
+        }
+
+        const data = await executeInBrowser(page, toExecute).catch((error) => {
+            console.error(error)
+        })
+
+        expect(data).toEqual({
+            existingStores: ['metadata'],
+            metadataSize: 1,
+        })
+    })
 })

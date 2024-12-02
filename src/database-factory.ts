@@ -1,5 +1,6 @@
 import { Transaction } from '@/component/transaction'
 import { Database } from '@/component/database'
+import { SynchronousPromise } from '@/promise/synchronous-promise'
 
 export type MigrationVersion = number
 
@@ -50,7 +51,7 @@ export class DatabaseFactory {
     }
 
     static deleteDatabase(name: string): Promise<void> {
-        return new Promise((resolve, reject) => {
+        return new SynchronousPromise<void>((resolve, reject) => {
             const request = this.factory().deleteDatabase(name)
             request.addEventListener('success', () => {
                 resolve()
@@ -64,7 +65,7 @@ export class DatabaseFactory {
                 const target = event.target as IDBOpenDBRequest
                 reject(target.error)
             })
-        })
+        }) as unknown as Promise<void>
     }
 
     static open(
@@ -73,7 +74,7 @@ export class DatabaseFactory {
         migrations: MigrationInterface[] = [],
         onBlocked?: OnBlocked
     ): Promise<Database> {
-        return new Promise((resolve, reject) => {
+        return new SynchronousPromise<Database>((resolve, reject) => {
             const request: IDBOpenDBRequest = this.factory().open(name, version)
 
             request.addEventListener('success', (event) => {
@@ -136,6 +137,6 @@ export class DatabaseFactory {
                     }
                 }
             })
-        })
+        }) as unknown as Promise<Database>
     }
 }

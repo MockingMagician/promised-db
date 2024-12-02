@@ -1,5 +1,7 @@
+import { SynchronousPromise } from '@/promise/synchronous-promise'
+
 export const requestResolver = <V>(request: IDBRequest<V>) =>
-    new Promise<V>((resolve, reject) => {
+    new SynchronousPromise<V>((resolve, reject) => {
         const onsuccess = (event: Event) => {
             request.removeEventListener('success', onsuccess)
             request.removeEventListener('error', onerror)
@@ -17,4 +19,4 @@ export const requestResolver = <V>(request: IDBRequest<V>) =>
 
         request.addEventListener('success', onsuccess)
         request.addEventListener('error', onerror)
-    })
+    }) as Promise<V>
