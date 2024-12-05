@@ -2,12 +2,14 @@ import {
     IndexInterface,
     KeyCursorInterface,
     ObjectStoreInterface,
+    TransactionInterface,
     ValueCursorInterface,
 } from '@/component/interface/components.interface'
 import { StoreIndex } from '@/component/store-index'
 import { ValueCursor } from '@/component/value-cursor'
 import { KeyCursor } from '@/component/key-cursor'
 import { requestResolver } from '@/shared/request-resolver'
+import { Transaction } from '@/component/transaction'
 
 export class ObjectStore implements ObjectStoreInterface {
     constructor(private readonly ctx: { objectStore: IDBObjectStore }) {}
@@ -114,5 +116,23 @@ export class ObjectStore implements ObjectStoreInterface {
 
     get indexNames(): string[] {
         return Array.from(this.ctx.objectStore.indexNames)
+    }
+
+    get autoIncrement(): boolean {
+        return this.ctx.objectStore.autoIncrement
+    }
+
+    get keyPath(): string | string[] {
+        return this.ctx.objectStore.keyPath
+    }
+
+    get name(): string {
+        return this.ctx.objectStore.name
+    }
+
+    get transaction(): TransactionInterface {
+        return new Transaction({
+            transaction: this.ctx.objectStore.transaction,
+        })
     }
 }

@@ -45,7 +45,7 @@ describe('transaction', () => {
         ])
     })
 
-    it('should get durability', async () => {
+    it('should get mode', async () => {
         const transaction = testInitializer.db.transaction(
             testInitializer.storeName,
             'readwrite'

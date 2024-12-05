@@ -45,6 +45,10 @@ export interface ObjectStoreInterface {
     ): KeyCursorInterface<PK, K>
     put<V, K extends IDBValidKey>(value: V, key?: K): Promise<void>
     indexNames: string[]
+    autoIncrement: boolean
+    keyPath: string | string[]
+    name: string
+    transaction: TransactionInterface
 }
 
 export interface IndexInterface {

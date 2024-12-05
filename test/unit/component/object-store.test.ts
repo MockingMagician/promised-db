@@ -1,4 +1,5 @@
 import { ComponentTestInitializer } from '../../test-helpers/component-test.initializer'
+import { Transaction } from '../../../src'
 
 describe('object store', () => {
     const testInitializer = new ComponentTestInitializer()
@@ -91,5 +92,29 @@ describe('object store', () => {
         const objectStore = await testInitializer.prepareStoreContent(0)
 
         expect(objectStore.indexNames).toEqual(['name_idx'])
+    })
+
+    it('get keyPath', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.keyPath).toEqual('id')
+    })
+
+    it('get autoIncrement', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.autoIncrement).toEqual(true)
+    })
+
+    it('get name', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.name).toBeDefined()
+    })
+
+    it('get transaction', async () => {
+        const objectStore = await testInitializer.prepareStoreContent(0)
+
+        expect(objectStore.transaction).toBeInstanceOf(Transaction)
     })
 })
