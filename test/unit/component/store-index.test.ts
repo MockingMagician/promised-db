@@ -45,7 +45,7 @@ describe('key cursor', () => {
     it('should get all keys', async () => {
         const objectStore = await testInitializer.prepareStoreContent(5)
 
-        expect(await objectStore.index('name_idx').getAllKeys()).toEqual([
+        expect(await objectStore.index('name_idx').getAllKeys<number>()).toEqual([
             1, 2, 3, 4, 5,
         ])
     })

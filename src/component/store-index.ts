@@ -54,17 +54,17 @@ export class StoreIndex implements IndexInterface {
         return requestResolver<R[]>(request)
     }
 
-    getAllKeys<K extends IDBValidKey>(
+    getAllKeys<KeyValType, K extends IDBValidKey>(
         query?: IDBKeyRange | K,
         count?: number
-    ): Promise<K[]> {
+    ): Promise<KeyValType[]> {
         const request = this.ctx.index.getAllKeys(query, count)
-        return requestResolver<K[]>(request as IDBRequest<K[]>)
+        return requestResolver<KeyValType[]>(request as IDBRequest<KeyValType[]>)
     }
 
-    getKey<K extends IDBValidKey>(key: IDBKeyRange | K): Promise<K> {
+    getKey<KeyValType, K extends IDBValidKey>(key: IDBKeyRange | K): Promise<KeyValType> {
         const request = this.ctx.index.getKey(key)
-        return requestResolver<K>(request as IDBRequest<K>)
+        return requestResolver<KeyValType>(request as IDBRequest<KeyValType>)
     }
 
     openCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(

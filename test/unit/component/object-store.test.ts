@@ -43,7 +43,7 @@ describe('object store', () => {
     it('should get key', async () => {
         const objectStore = await testInitializer.prepareStoreContent(5)
 
-        expect(await objectStore.getKey(3)).toEqual(3)
+        expect(await objectStore.getKey<number>(3)).toEqual(3)
         expect(await objectStore.getKey(IDBKeyRange.bound(2, 4))).toEqual(2)
         expect(
             await objectStore.getKey(IDBKeyRange.bound(2, 4, true, true))

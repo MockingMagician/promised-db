@@ -63,11 +63,11 @@ export interface IndexInterface {
         query?: IDBKeyRange | K,
         count?: number
     ): Promise<R[]>
-    getAllKeys<K extends IDBValidKey>(
-        query?: IDBKeyRange | K,
-        count?: number
-    ): Promise<K[]>
-    getKey<K extends IDBValidKey>(key: IDBKeyRange | K): Promise<K>
+    getAllKeys<KeyValType, KType extends IDBValidKey = IDBValidKey>(
+        query?: IDBKeyRange | KType,
+        count?: number,
+    ): Promise<KeyValType[]>
+    getKey<KeyValType, K extends IDBValidKey = IDBValidKey>(key: IDBKeyRange | K): Promise<KeyValType>
     openCursor<PK extends IDBValidKey, K extends IDBValidKey, R>(
         query?: IDBKeyRange | K,
         direction?: IDBCursorDirection
